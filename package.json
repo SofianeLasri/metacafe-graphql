@@ -1,21 +1,16 @@
 {
   "name": "metacafe",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "Un réseau social comme les autres",
+  "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "setup": "npm install && (cd client && npm install) && (cd .. && cd server && npm install)",
+    "start-client": "cd client && npm run dev",
+    "start-server": "cd server && npm run dev",
+    "start": "concurrently \"npm run start-client\" \"npm run start-server\""
   },
+  "author": "SofianeLasri",
   "dependencies": {
-    "vue": "^3.3.8"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^4.5.0",
-    "sass": "^1.69.5",
-    "typescript": "^5.2.2",
-    "vite": "^5.0.0",
-    "vue-tsc": "^1.8.22"
+    "concurrently": "^8.2.2"
   }
 }
