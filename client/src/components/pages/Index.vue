@@ -1,5 +1,5 @@
 <template>
-  <img src="../assets/rabbids.png" alt="Lapin crétin">
+  <img src="../../assets/rabbids.png" alt="Lapin crétin">
 </template>
 <style>
 body {
