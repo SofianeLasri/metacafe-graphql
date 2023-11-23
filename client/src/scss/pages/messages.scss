@@ -1,0 +1,32 @@
+.messages-app {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    background-color: $dark;
+    width: 100%;
+    height: 100vh;
+
+    .sidebar {
+        width: 20rem;
+        display: flex;
+        flex-direction: column;
+        background-color: $white;
+
+        .profile-card {
+            background-color: $dark;
+            border-bottom: $border-width solid $black;
+            border-right: $border-width solid $black;
+        }
+    }
+
+    #conversation {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+
+        .conversation-header {
+            background-color: $dark;
+            border-bottom: $border-width solid $black;
+        }
+    }
+}
