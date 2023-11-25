@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import ProfileCard from "../components/ProfileCard.vue";
-import SearchZone from "~@/components/components/SearchZone.vue";
+import { faSmile, faImage } from '@fortawesome/free-regular-svg-icons'
+import {faMicrophone} from "@fortawesome/free-solid-svg-icons";
 import profilePic from "~@/assets/images/square-logo-with-background.png?url";
+import SideBar from "~@/components/components/SideBar.vue";
+import ProfileCard from "~@/components/components/ProfileCard.vue";
+import {onMounted} from "vue";
+
+library.add(faSmile, faImage, faMicrophone);
 
 const fakeUsers: any[] = [
   {
@@ -56,59 +60,30 @@ const fakeUsers: any[] = [
   },
 ];
 
+onMounted (() => {
+
+});
 </script>
 
 <template>
   <div class="messages-app">
-    <div class="sidebar">
-      <div class="header">
-        <div class="profile-card-header">
-          <div class="background"></div>
-          <ProfileCard
-              :id="1"
-              :username="`SofianeLasri`"
-              :avatar="profilePic"
-              :action-text="`Voir le profil`"
-              :action-link="`#`"
-          />
-        </div>
-
-        <SearchZone />
-      </div>
-
-      <div class="user-list">
-        <div class="list-item" v-for="user in fakeUsers" :key="user.id">
-          <ProfileCard
-              :id="`${user.id}`"
-              :username="`${user.username}`"
-              :avatar="`${user.avatar}`"
-              :status="`${user.status}`"
-          />
-        </div>
-      </div>
-
-      <button class="disconnect-btn" id="disconnectBtn">Déconnexion</button>
-    </div>
+    <SideBar :users="fakeUsers"/>
     <div id="conversation">
       <div class="conversation-header">
-        <div class="profile-card-header">
-          <div class="profile-pic"></div>
-          <div class="d-flex flex-column">
-            <div class="profile-name">Jaqueline</div>
-            <div class="profile-meta">En ligne</div>
-          </div>
-        </div>
+        <ProfileCard
+            :id="1"
+            :username="`Jaquelines`"
+            :avatar="profilePic"
+            :status="`En ligne`"
+        />
       </div>
       <div class="conversation-body">
-
       </div>
       <div class="conversation-footer">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="Tapez votre message">
-          <div class="input-group-append">
-            <button class="btn btn-primary">Envoyer</button>
-          </div>
-        </div>
+        <button type="button" id="openSmileysBtn"><font-awesome-icon :icon="['far', 'face-smile']" /></button>
+        <button type="button" id="sendPictureBtn"><font-awesome-icon :icon="['far', 'image']" /></button>
+        <input type="text" placeholder="Tapez votre message ici">
+        <button type="button" id="sendVoiceMessage"><font-awesome-icon :icon="['fas', 'microphone']" /></button>
       </div>
     </div>
   </div>

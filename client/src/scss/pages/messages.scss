@@ -131,10 +131,74 @@
         flex-grow: 1;
         display: flex;
         flex-direction: column;
+        background-image: url("~@/assets/images/pattern.png");
+        background-size: 15rem;
+        background-repeat: repeat;
 
         .conversation-header {
+            display: flex;
+            align-items: center;
             background-color: $dark;
             border-bottom: $border-width solid $black;
+            padding: map.get($spacers, 2) map.get($spacers, 3);
+            color: $white;
+
+            .profile-card .profile-action {
+                color: $gray-500;
+            }
+        }
+
+        .conversation-body {
+            flex-grow: 1;
+        }
+
+        .conversation-footer {
+            display: flex;
+            align-items: center;
+            gap: map.get($spacers, 2);
+            background-color: $dark;
+            border-top: $border-width solid $black;
+            padding: map.get($spacers, 2) map.get($spacers, 3);
+            color: $white;
+
+            button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 2rem;
+                aspect-ratio: 1;
+                background-color: $danger;
+                color: inherit;
+                border-radius: 50%;
+                border: none;
+            }
+
+            input {
+                flex-grow: 1;
+                height: 2rem;
+                border: none;
+                border-radius: $border-radius;
+                padding: map.get($spacers, 1) map.get($spacers, 2);
+                margin-right: map.get($spacers, 2);
+
+                &:focus {
+                    outline: solid $danger;
+                }
+            }
+
+            textarea {
+                flex-grow: 1;
+                height: 2rem;
+                border: none;
+                border-radius: $border-radius;
+                padding: map.get($spacers, 1) map.get($spacers, 2);
+                margin-right: map.get($spacers, 2);
+                resize: none;
+
+                &:focus {
+                    outline: solid $danger;
+                }
+            }
         }
     }
 }
