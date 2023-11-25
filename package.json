@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "setup": "npm install && (cd client && npm install) && (cd .. && cd server && npm install)",
-    "start-client": "cd client && npm run dev",
+    "start-client": "cd client && npm run dev:host",
     "start-server": "cd server && npm run dev",
     "start": "concurrently \"npm run start-client\" \"npm run start-server\""
   },
