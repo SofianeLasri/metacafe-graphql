@@ -1,3 +1,10 @@
+// Colors
+$primary: #45BCFF;
+$dark: #2E2D31;
+$danger: #FF0458;
+$warning: #FCD13B;
+$success: #00F0B6;
+
 // Typography
 //
 // Font, line-height, and color for body text, headings, and more.
@@ -10,10 +17,7 @@ $font-weight-semibold: 600;
 $font-weight-bold: 700;
 $font-weight-bolder: bolder;
 
-$headings-font-weight: $font-weight-bold;
+$link-hover-color: $danger;
+$link-decoration: none;
 
-$primary: #45BCFF;
-$dark: #2E2D31;
-$danger: #FF0458;
-$warning: #FCD13B;
-$success: #00F0B6;
+$headings-font-weight: $font-weight-bold;

@@ -30,12 +30,13 @@
 @import "~bootstrap/scss/modal";
 @import "~bootstrap/scss/buttons";
 
+@import "components/profile-card";
+@import "components/search-zone";
+
 // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
 @import "~bootstrap/scss/utilities/api";
 
 // Pages
 @import "pages/messages";
 
-#app {
-    width: 100%;
-}
+@import "custom";
