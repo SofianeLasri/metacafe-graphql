@@ -32,6 +32,7 @@
   }
 
   .conversation-footer {
+    position: relative;
     display: flex;
     align-items: center;
     gap: map.get($spacers, 2);
@@ -76,6 +77,61 @@
 
       &:focus {
         outline: solid $danger;
+      }
+    }
+
+    .upper-popups {
+      .popup {
+        $padding: map.get($spacers, 2);
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        left: $padding;
+        width: 20rem;
+        background-color: $dark;
+        padding: map.get($spacers, 2);
+        border-radius: $border-radius;
+        border: map.get($border-widths, 3) solid $danger;
+
+        &.active {
+          display: flex;
+        }
+
+        .subtitle {
+          color: $gray-500;
+          font-size: $small-font-size;
+        }
+
+        &#emojiPicker {
+          $height: 25rem;
+          height: $height;
+          top: -$height - $padding;
+
+          #emojiListContainer {
+            overflow-y: auto;
+
+            .emojis {
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(3rem, 1fr));
+
+              .emoji {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 2rem;
+                aspect-ratio: 1;
+                font-size: 1.5rem;
+                cursor: pointer;
+                border-radius: $border-radius;
+                user-select: none;
+
+                &:hover {
+                  background-color: $gray-500;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
