@@ -1,0 +1,33 @@
+@use "sass:map";
+@use "sass:color";
+
+.message {
+  display: flex;
+  flex-direction: column;
+
+  max-width: 80%;
+  padding: map.get($spacers, 2) map.get($spacers, 3);
+  border-radius: $border-radius *  2;
+
+  &.me {
+    background-color: $white;
+    align-self: flex-end;
+  }
+
+  &.friend {
+    background-color: $gray-500;
+  }
+
+  .meta {
+    color: $text-muted;
+    font-size: $small-font-size;
+  }
+
+  .text {
+    word-wrap: break-word;
+
+    p {
+      margin: 0;
+    }
+  }
+}
