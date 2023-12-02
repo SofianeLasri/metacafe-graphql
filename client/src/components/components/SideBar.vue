@@ -2,14 +2,55 @@
 import profilePic from "~@/assets/images/square-logo-with-background.png?url";
 import ProfileCard from "~@/components/components/ProfileCard.vue";
 import SearchZone from "~@/components/components/SearchZone.vue";
+import {onMounted, ref} from "vue";
 
 const props = defineProps<{
   users: any[];
 }>();
+
+const sidebarRef = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+  const sidebar: HTMLElement | null = document.getElementById("sidebar");
+  sidebarRef.value = sidebar;
+
+  if (sidebar) {
+    let touchStartX: number;
+    let sidebarLeft: number;
+
+    sidebar.addEventListener("touchstart", (e) => {
+      touchStartX = e.touches[0].clientX;
+      sidebarLeft = sidebar.getBoundingClientRect().left;
+    });
+
+    sidebar.addEventListener("touchmove", (e) => {
+      const touchCurrentX = e.touches[0].clientX;
+      const deltaX = touchCurrentX - touchStartX;
+      const newLeft = sidebarLeft + deltaX;
+
+      if (newLeft <= 0) {  // You can adjust this threshold as needed
+        sidebar.style.left = `${newLeft}px`;
+      } else {
+        sidebar.style.left = "0";
+      }
+    });
+
+    sidebar.addEventListener("touchend", () => {
+      const currentLeft = parseInt(sidebar.style.left || "0", 10);
+
+      if (currentLeft <= -60) {
+        sidebar.style.left = "-100%";
+
+      } else {
+        sidebar.style.left = "0";
+      }
+    });
+  }
+});
 </script>
 
 <template>
-  <div class="sidebar">
+  <div id="sidebar" class="sidebar">
     <div class="header">
       <div class="profile-card-header">
         <div class="background"></div>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSmile, faImage } from '@fortawesome/free-regular-svg-icons'
-import {faMicrophone} from "@fortawesome/free-solid-svg-icons";
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {faSmile, faImage} from '@fortawesome/free-regular-svg-icons'
+import {faMicrophone, faBars} from "@fortawesome/free-solid-svg-icons";
 import ProfileCard from "~@/components/components/ProfileCard.vue";
 import profilePic from "~@/assets/images/square-logo-with-background.png?url";
 import Message from "~@/components/components/Message.vue";
 import {onMounted} from "vue";
 import emojiByGroup from "unicode-emoji-json/data-by-group.json";
 
-library.add(faSmile, faImage, faMicrophone);
+library.add(faSmile, faImage, faMicrophone, faBars);
 
 type emojiDataByGroup = {
   [key: string]: {
@@ -23,15 +23,21 @@ type emojiDataByGroup = {
 
 const emojiDataByGroup: emojiDataByGroup = JSON.parse(JSON.stringify(emojiByGroup));
 
-onMounted (() => {
-  const emojiListContainer:HTMLElement = document.getElementById("emojiListContainer")!;
-  const messageInput:HTMLInputElement = document.getElementById("messageInput")!;
+onMounted(() => {
+  const openSidebarBtn: HTMLElement = document.getElementById("openSidebarBtn")!;
+  const sidebar: HTMLElement = document.getElementById("sidebar")!;
+  const emojiListContainer: HTMLElement = document.getElementById("emojiListContainer")!;
+  const messageInput: HTMLInputElement = document.getElementById("messageInput")!;
   createEmojiGroupsDomElements(emojiDataByGroup, emojiListContainer, messageInput);
-  const emojiPicker:HTMLElement = document.getElementById("emojiPicker")!;
-  const pickEmojiBtn:HTMLElement = document.getElementById("pickEmojiBtn")!;
+  const emojiPicker: HTMLElement = document.getElementById("emojiPicker")!;
+  const pickEmojiBtn: HTMLElement = document.getElementById("pickEmojiBtn")!;
 
   pickEmojiBtn.addEventListener("click", () => {
     emojiPicker.classList.toggle("active");
+  });
+
+  openSidebarBtn.addEventListener("click", () => {
+    sidebar.style.left = "0";
   });
 });
 
@@ -70,6 +76,9 @@ function createEmojiGroupsDomElements(emojiData: emojiDataByGroup, emojiListCont
 <template>
   <div id="conversation">
     <div class="conversation-header">
+      <button type="button" id="openSidebarBtn">
+        <font-awesome-icon :icon="['fas', 'bars']"/>
+      </button>
       <ProfileCard
           :id="1"
           :username="`Jaquelines`"
@@ -78,8 +87,8 @@ function createEmojiGroupsDomElements(emojiData: emojiDataByGroup, emojiListCont
       />
     </div>
     <div class="conversation-body">
-      <Message attachments="" sender="me" text="Lorem ipsum dolor sit amet" timestamp="1701510226" />
-      <Message attachments="" sender="friend" text="Lorem ipsum dolor sit amet" timestamp="1701510247" />
+      <Message attachments="" sender="me" text="Lorem ipsum dolor sit amet" timestamp="1701510226"/>
+      <Message attachments="" sender="friend" text="Lorem ipsum dolor sit amet" timestamp="1701510247"/>
     </div>
     <div class="conversation-footer">
       <div class="upper-popups">
@@ -96,10 +105,16 @@ function createEmojiGroupsDomElements(emojiData: emojiDataByGroup, emojiListCont
 
         </div>
       </div>
-      <button type="button" id="pickEmojiBtn"><font-awesome-icon :icon="['far', 'face-smile']" /></button>
-      <button type="button" id="sendPictureBtn"><font-awesome-icon :icon="['far', 'image']" /></button>
+      <button type="button" id="pickEmojiBtn">
+        <font-awesome-icon :icon="['far', 'face-smile']"/>
+      </button>
+      <button type="button" id="sendPictureBtn">
+        <font-awesome-icon :icon="['far', 'image']"/>
+      </button>
       <input id="messageInput" type="text" placeholder="Tapez votre message ici">
-      <button type="button" id="sendVoiceMessage"><font-awesome-icon :icon="['fas', 'microphone']" /></button>
+      <button type="button" id="sendVoiceMessage">
+        <font-awesome-icon :icon="['fas', 'microphone']"/>
+      </button>
     </div>
   </div>
 </template>

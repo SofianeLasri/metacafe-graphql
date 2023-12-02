@@ -15,9 +15,30 @@
     border-bottom: $border-width solid $black;
     padding: map.get($spacers, 2) map.get($spacers, 3);
     color: $white;
+    gap: map.get($spacers, 2);
 
     .profile-card .profile-action {
       color: $gray-500;
+    }
+
+    #openSidebarBtn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 2rem;
+      aspect-ratio: 1;
+      background-color: transparent;
+      color: inherit;
+      border-radius: $border-radius;
+      border: none;
+
+      &:hover {
+        background-color: $gray-500;
+      }
+
+      @include media-breakpoint-up(lg) {
+        display: none;
+      }
     }
   }
 
