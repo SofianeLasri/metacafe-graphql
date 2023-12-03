@@ -14,7 +14,7 @@
         box-shadow: 0 0 2px 0 color.adjust($black, $alpha: -0.5);
 
         &:focus-within {
-            border-bottom: map.get($border-widths, 3) solid $danger;
+            border-bottom: map.get($border-widths, 3) solid $primary;
         }
 
         > * {

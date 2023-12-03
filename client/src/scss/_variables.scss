@@ -1,7 +1,8 @@
 // Colors
-$primary: #45BCFF;
-$dark: #2E2D31;
 $danger: #FF0458;
+$primary: $danger;
+$secondary: #45BCFF;
+$dark: #2E2D31;
 $warning: #FCD13B;
 $success: #00F0B6;
 
@@ -17,7 +18,7 @@ $font-weight-semibold: 600;
 $font-weight-bold: 700;
 $font-weight-bolder: bolder;
 
-$link-hover-color: $danger;
+$link-hover-color: $primary;
 $link-decoration: none;
 
 $headings-font-weight: $font-weight-bold;

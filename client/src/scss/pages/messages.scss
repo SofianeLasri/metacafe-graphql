@@ -123,13 +123,13 @@
             border: none;
             border-top: $border-width solid $border-color;
             padding: map.get($spacers, 2);
-            color: $danger;
+            color: $primary;
 
             &:hover {
                 cursor: pointer;
                 color: $white;
-                background-color: $danger;
-                border-color: $danger;
+                background-color: $primary;
+                border-color: $primary;
             }
         }
     }

@@ -68,7 +68,7 @@
       align-items: center;
       width: 2rem;
       aspect-ratio: 1;
-      background-color: $danger;
+      background-color: $primary;
       color: inherit;
       border-radius: 50%;
       border: none;
@@ -83,7 +83,7 @@
       margin-right: map.get($spacers, 2);
 
       &:focus {
-        outline: solid $danger;
+        outline: solid $primary;
       }
     }
 
@@ -97,7 +97,7 @@
       resize: none;
 
       &:focus {
-        outline: solid $danger;
+        outline: solid $primary;
       }
     }
 
@@ -112,7 +112,7 @@
         background-color: $dark;
         padding: map.get($spacers, 2);
         border-radius: $border-radius;
-        border: map.get($border-widths, 3) solid $danger;
+        border: map.get($border-widths, 3) solid $primary;
 
         &.active {
           display: flex;

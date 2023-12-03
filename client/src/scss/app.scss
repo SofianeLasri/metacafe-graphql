@@ -29,6 +29,7 @@
 @import "~bootstrap/scss/badge";
 @import "~bootstrap/scss/modal";
 @import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/forms";
 
 @import "components/profile-card";
 @import "components/search-zone";
@@ -40,5 +41,6 @@
 
 // Pages
 @import "pages/messages";
+@import "pages/login";
 
 @import "custom";
