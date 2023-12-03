@@ -33,7 +33,7 @@
         </div>
       </div>
     </div>
-    <div class="d-flex gap-3 flex-wrap">
+    <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
       <a href="#" class="small text-light">Mentions légales</a>
       <a href="#" class="small text-light">Politique de confidentialité</a>
       <a href="#" class="small text-light">Conditions générales d'utilisation</a>

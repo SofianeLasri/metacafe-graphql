@@ -6,13 +6,12 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    $height: 40rem;
 
     .phone-presentation {
         display: none;
         align-items: center;
         justify-content: center;
-        height: $height;
+        height: 40rem;
 
         img {
             width: 100%;
@@ -30,7 +29,6 @@
         flex-direction: column;
         justify-content: center;
         width: 100%;
-        height: $height;
         gap: map.get($spacers, 3);
 
         @include media-breakpoint-up(lg) {
