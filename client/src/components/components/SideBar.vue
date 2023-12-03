@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import profilePic from "~@/assets/images/square-logo-with-background.png?url";
+import profilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import ProfileCard from "~@/components/components/ProfileCard.vue";
 import SearchZone from "~@/components/components/SearchZone.vue";
 import {onMounted, ref} from "vue";

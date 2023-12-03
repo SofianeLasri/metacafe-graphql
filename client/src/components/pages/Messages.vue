@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import profilePic from "~@/assets/images/square-logo-with-background.png?url";
+import profilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import SideBar from "~@/components/components/SideBar.vue";
 import {onMounted} from "vue";
 import Conversation from "~@/components/components/Conversation.vue";

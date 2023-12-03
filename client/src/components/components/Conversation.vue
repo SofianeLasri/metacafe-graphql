@@ -3,7 +3,7 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {faSmile, faImage} from '@fortawesome/free-regular-svg-icons'
 import {faMicrophone, faBars} from "@fortawesome/free-solid-svg-icons";
 import ProfileCard from "~@/components/components/ProfileCard.vue";
-import profilePic from "~@/assets/images/square-logo-with-background.png?url";
+import profilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import Message from "~@/components/components/Message.vue";
 import {onMounted} from "vue";
 import emojiByGroup from "unicode-emoji-json/data-by-group.json";
