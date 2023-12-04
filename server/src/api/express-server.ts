@@ -1,15 +1,12 @@
 import express from 'express';
-import {ExpressRouter} from "./express-router";
-import bodyParser from "body-parser";
+import routes from "./routes";
 
 export class ExpressServer {
     private express = express();
 
     constructor(
-        private expressRouter: ExpressRouter,
         private port: string,
     ) {
-        this.configureBodyParser();
         this.configureRoutes();
     }
 
@@ -19,11 +16,7 @@ export class ExpressServer {
         });
     }
 
-    private configureBodyParser(): void {
-        this.express.use(bodyParser.json());
-    }
-
     private configureRoutes(): void {
-        this.express.use('/api', this.expressRouter.router);
+        this.express.use('/api', routes);
     }
 }

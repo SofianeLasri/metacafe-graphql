@@ -1,14 +1,10 @@
 import { ExpressServer } from './express-server';
 import * as dotenv from 'dotenv';
-import {ExpressRouter} from "./express-router";
-import {UserService} from "../user/user.service";
-import {UserJsonService} from "../user/user.json.service";
+import dbInit from "../db/inits";
 
 export class ExpressApplication {
-    private expressRouter!: ExpressRouter;
     private port!: string;
     private server!: ExpressServer;
-    private userService!: UserService;
 
     constructor() {
         this.configureApplication();
@@ -21,8 +17,7 @@ export class ExpressApplication {
     private configureApplication(): void {
         this.configureEnvironment();
         this.configureServerPort();
-        this.configureServices();
-        this.configureExpressRouter();
+        dbInit();
         this.configureServer();
     }
 
@@ -36,16 +31,8 @@ export class ExpressApplication {
         this.port = this.getPort();
     }
 
-    private configureServices(): void {
-        this.userService = new UserJsonService();
-    }
-
-    private configureExpressRouter(): void {
-        this.expressRouter = new ExpressRouter(this.userService);
-    }
-
     private configureServer(): void {
-        this.server = new ExpressServer(this.expressRouter, this.port);
+        this.server = new ExpressServer(this.port);
     }
 
     private getPort(): string {
