@@ -2,8 +2,8 @@ import {Op} from 'sequelize'
 import User, {UserInput, UserOutput} from "../models/User";
 import {GetAllUsersFilters} from "./types";
 
-export const create = async (paylod: UserInput): Promise<UserOutput> => {
-    return await User.create(paylod);
+export const create = async (payload: UserInput): Promise<UserOutput> => {
+    return await User.create(payload);
 }
 
 export const update = async (id: number, payload: Partial<UserInput>): Promise<UserOutput> => {

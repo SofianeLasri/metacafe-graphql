@@ -1,31 +1,29 @@
 import {DataTypes, Model, Optional} from "sequelize";
 import sequelizeConnection from "../config";
 
-interface UserAttributes {
+interface AttachmentAttributes {
     id: number;
     name: string;
-    email: string;
-    password: string;
+    path: string;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
 }
 
-export interface UserInput extends Optional<UserAttributes, 'id'> {}
-export interface UserOutput extends Required<UserAttributes> {}
+export interface AttachmentInput extends Optional<AttachmentAttributes, 'id'> {}
+export interface AttachmentOutput extends Required<AttachmentAttributes> {}
 
-class User extends Model<UserAttributes, UserInput> implements UserAttributes {
+class Attachment extends Model<AttachmentAttributes, AttachmentInput> implements AttachmentAttributes{
     public id!: number;
     public name!: string;
-    public email!: string;
-    public password!: string;
+    public path!: string;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
     public readonly deletedAt!: Date;
 }
 
-User.init({
+Attachment.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
@@ -35,19 +33,15 @@ User.init({
         type: DataTypes.STRING(128),
         allowNull: false,
     },
-    email: {
-        type: DataTypes.STRING(128),
-        allowNull: false,
-    },
-    password: {
+    path: {
         type: DataTypes.STRING(128),
         allowNull: false,
     },
 }, {
     timestamps: true,
-    tableName: 'users',
+    tableName: 'attachments',
     sequelize: sequelizeConnection,
     paranoid: true
 });
 
-export default User;
+export default Attachment;
