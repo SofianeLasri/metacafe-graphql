@@ -7,13 +7,23 @@ export const create = async (payload: UserInput): Promise<UserOutput> => {
 }
 
 export const update = async (id: number, payload: Partial<UserInput>): Promise<UserOutput> => {
-    const user = await User.findByPk(id);
+    const user: User | null = await User.findByPk(id);
     if (!user) throw new Error('User not found');
     return await user.update(payload);
 }
 
 export const getById = async (id: number): Promise<UserOutput> => {
-    const user = await User.findByPk(id);
+    const user: User | null = await User.findByPk(id);
+    if (!user) throw new Error('User not found');
+    return user;
+}
+
+export const getByEmail = async (email: string): Promise<UserOutput> => {
+    const user: User | null = await User.findOne({
+        where: {
+            email,
+        },
+    });
     if (!user) throw new Error('User not found');
     return user;
 }

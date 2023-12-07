@@ -10,5 +10,8 @@ export const toUser = (user: UserOutput): User => {
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
         deletedAt: user.deletedAt,
+        validPassword(password: string): Boolean {
+            return false;
+        }
     }
 }

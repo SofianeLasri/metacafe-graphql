@@ -1,5 +1,5 @@
 import * as service from "../../services/userService";
-import {CreateUserDTO, FilterUsersDTO, UpdateUserDTO} from "../../dataTransferObjects/ingredient.dto";
+import {CreateUserDTO, FilterUsersDTO, UpdateUserDTO} from "../../dataTransferObjects/user.dto";
 import * as mapper from './mapper'
 import {User} from "../../interfaces";
 
@@ -13,6 +13,10 @@ export const update = async(id: number, payload: UpdateUserDTO): Promise<User> =
 
 export const getById = async(id: number): Promise<User> => {
     return mapper.toUser(await service.getById(id));
+}
+
+export const getByEmail = async(email: string): Promise<User> => {
+    return mapper.toUser(await service.getByEmail(email));
 }
 
 export const deleteById = async(id: number): Promise<boolean> => {

@@ -1,5 +1,6 @@
 import {DataTypes, Model, Optional} from "sequelize";
 import sequelizeConnection from "../config";
+import bcrypt from 'bcrypt';
 
 interface UserAttributes {
     id: number;
@@ -23,6 +24,10 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
     public readonly deletedAt!: Date;
+
+    public validPassword(password: string): boolean {
+        return bcrypt.compareSync(password, this.password);
+    }
 }
 
 User.init({
@@ -38,6 +43,7 @@ User.init({
     email: {
         type: DataTypes.STRING(128),
         allowNull: false,
+        unique: true,
     },
     password: {
         type: DataTypes.STRING(128),

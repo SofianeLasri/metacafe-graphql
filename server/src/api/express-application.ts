@@ -1,10 +1,11 @@
-import { ExpressServer } from './express-server';
+import {ExpressServer} from './express-server';
 import * as dotenv from 'dotenv';
 import dbInit from "../db/inits";
 
 export class ExpressApplication {
     private port!: string;
     private server!: ExpressServer;
+    private sessionSecret!: string;
 
     constructor() {
         this.configureApplication();
@@ -16,7 +17,7 @@ export class ExpressApplication {
 
     private configureApplication(): void {
         this.configureEnvironment();
-        this.configureServerPort();
+        this.configureEnvVariables();
         dbInit();
         this.configureServer();
     }
@@ -27,12 +28,13 @@ export class ExpressApplication {
         });
     }
 
-    private configureServerPort(): void {
+    private configureEnvVariables(): void {
         this.port = this.getPort();
+        this.sessionSecret = this.getSessionSecret();
     }
 
     private configureServer(): void {
-        this.server = new ExpressServer(this.port);
+        this.server = new ExpressServer(this.port, this.sessionSecret);
     }
 
     private getPort(): string {
@@ -42,5 +44,14 @@ export class ExpressApplication {
         }
 
         return port;
+    }
+
+    private getSessionSecret(): string {
+        const sessionSecret = process.env.SESSION_SECRET;
+        if (!sessionSecret) {
+            throw new Error('No session secret was found in env file.');
+        }
+
+        return sessionSecret;
     }
 }

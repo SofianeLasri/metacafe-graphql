@@ -6,4 +6,6 @@ export interface User {
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
+
+    validPassword(password: string): Boolean;
 }
