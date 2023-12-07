@@ -16,8 +16,8 @@ export class ExpressServer {
     ) {
         this.port = port;
         this.secret = secret;
-        this.configureRoutes();
         this.configureMiddlewares();
+        this.configureRoutes();
     }
 
     bootstrap(): void {
