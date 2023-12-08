@@ -1,3 +1,28 @@
+<script setup lang="ts">
+import RegisterForm from "~@/components/components/RegisterForm.vue";
+import LoginForm from "~@/components/components/LoginForm.vue";
+import {onMounted} from "vue";
+
+onMounted(() => {
+  const loginForm: HTMLElement = document.getElementById("loginForm")!;
+  const registerForm: HTMLElement = document.getElementById("registerForm")!;
+  const showLoginFormLink: HTMLLinkElement = document.getElementById("showLoginFormLink")! as HTMLLinkElement;
+  const showRegisterFormLink: HTMLLinkElement = document.getElementById("showRegisterFormLink")! as HTMLLinkElement;
+
+  showLoginFormLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    loginForm.classList.remove("d-none");
+    registerForm.classList.add("d-none");
+  });
+
+  showRegisterFormLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    loginForm.classList.add("d-none");
+    registerForm.classList.remove("d-none");
+  });
+});
+</script>
+
 <template>
   <div class="login-form">
     <div class="d-flex">
@@ -5,31 +30,11 @@
         <img src="../../assets/images/home-presentation.avif" alt="phone-presentation"/>
       </div>
       <div class="right-part">
-        <div class="logo">
-          <img src="../../assets/images/Logo-Large-White.avif" alt="logo"/>
+        <div id="loginForm">
+          <LoginForm/>
         </div>
-        <form class="form">
-          <h4>Connexion</h4>
-
-          <div class="my-3">
-            <div class="form-floating mb-3">
-              <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-              <label for="floatingInput">Email address</label>
-            </div>
-            <div class="form-floating">
-              <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-              <label for="floatingPassword">Password</label>
-            </div>
-          </div>
-
-          <button type="submit" class="btn btn-primary">Se connecter</button>
-          <div class="mt-3 d-flex flex-column text-center">
-            <a href="#" class="small text-muted">Mot de passe oublié ?</a>
-          </div>
-        </form>
-
-        <div class="form">
-          <span>Vous n'avez pas de compte ? <a href="#" class="fw-bold">Inscrivez-vous</a></span>
+        <div id="registerForm" class="d-none">
+          <RegisterForm/>
         </div>
       </div>
     </div>
@@ -44,5 +49,3 @@
 <style>
 
 </style>
-<script setup lang="ts">
-</script>

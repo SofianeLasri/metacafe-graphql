@@ -25,11 +25,18 @@
     }
 
     .right-part {
+        width: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        width: 100%;
         gap: map.get($spacers, 3);
+
+        > * {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: map.get($spacers, 3);
+        }
 
         @include media-breakpoint-up(lg) {
             width: 22rem;

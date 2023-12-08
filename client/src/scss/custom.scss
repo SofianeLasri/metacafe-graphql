@@ -35,4 +35,8 @@ body {
 
 .btn-primary {
     color: $white;
+
+    &:hover {
+        color: $white;
+    }
 }
