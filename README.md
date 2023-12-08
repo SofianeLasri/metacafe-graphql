@@ -15,4 +15,4 @@ Voici la liste des fonctionnalité que doit posséder ce projet :
 
 # Installation
 
-Lancez la commande `npm run setup` pour installer les dépendances du projet, puis `npm run start` pour lancer le site.
+Lancez la commande `npm run setup` pour installer les dépendances du projet, `docker compose up -d` pour créer le container docker, puis `npm run start` pour lancer le site.

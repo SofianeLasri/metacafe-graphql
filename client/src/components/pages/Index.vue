@@ -4,10 +4,7 @@ import LoginForm from "~@/components/components/LoginForm.vue";
 import {onMounted} from "vue";
 import router from "~@/router.ts";
 
-const serverProtocol = import.meta.env.VITE_SERVER_PROTOCOL as string;
-const serverHost = import.meta.env.VITE_SERVER_HOST as string;
-const serverPort = import.meta.env.VITE_SERVER_PORT as string;
-const serverBaseUrl = `${serverProtocol}://${serverHost}:${serverPort}`;
+const serverBaseUrl = import.meta.env.VITE_BACKEND_URL as string;
 const loginApiUrl = `${serverBaseUrl}/api/auth/login`;
 const registerApiUrl = `${serverBaseUrl}/api/auth/register`;
 
@@ -51,6 +48,7 @@ onMounted(() => {
         window.location.href = router.resolve({name: "messages"}).href;
       } else {
         loginError.classList.remove("d-none");
+        console.log(response);
       }
     });
   });
@@ -81,6 +79,7 @@ onMounted(() => {
         window.location.href = router.resolve({name: "messages"}).href;
       } else {
         registerError.classList.remove("d-none");
+        console.log(response);
       }
     });
   });
