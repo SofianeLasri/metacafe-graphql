@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express, {Express} from 'express';
 import routes from "./routes";
 import session from 'express-session';
@@ -31,6 +32,14 @@ export class ExpressServer {
     }
 
     private configureMiddlewares(): void {
+        const allowedOrigins = ['http://localhost:5173'];
+
+        const options: cors.CorsOptions = {
+            origin: allowedOrigins
+        };
+
+        this.express.use(cors(options));
+
         this.express.use(session({
             secret: this.secret,
             resave: false,

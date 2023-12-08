@@ -2,6 +2,14 @@
 import RegisterForm from "~@/components/components/RegisterForm.vue";
 import LoginForm from "~@/components/components/LoginForm.vue";
 import {onMounted} from "vue";
+import router from "~@/router.ts";
+
+const serverProtocol = import.meta.env.VITE_SERVER_PROTOCOL as string;
+const serverHost = import.meta.env.VITE_SERVER_HOST as string;
+const serverPort = import.meta.env.VITE_SERVER_PORT as string;
+const serverBaseUrl = `${serverProtocol}://${serverHost}:${serverPort}`;
+const loginApiUrl = `${serverBaseUrl}/api/auth/login`;
+const registerApiUrl = `${serverBaseUrl}/api/auth/register`;
 
 onMounted(() => {
   const loginForm: HTMLElement = document.getElementById("loginForm")!;
@@ -19,6 +27,62 @@ onMounted(() => {
     e.preventDefault();
     loginForm.classList.add("d-none");
     registerForm.classList.remove("d-none");
+  });
+
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email: HTMLInputElement = document.getElementById("emailInput")! as HTMLInputElement;
+    const password: HTMLInputElement = document.getElementById("passwordInput")! as HTMLInputElement;
+    const loginError: HTMLElement = document.getElementById("loginError")!;
+
+    const data = {
+      email: email.value,
+      password: password.value
+    };
+
+    fetch(loginApiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data),
+    }).then((response) => {
+      if (response.status === 200) {
+        window.location.href = router.resolve({name: "messages"}).href;
+      } else {
+        loginError.classList.remove("d-none");
+      }
+    });
+  });
+
+  registerForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email: HTMLInputElement = document.getElementById("emailInput")! as HTMLInputElement;
+    const password: HTMLInputElement = document.getElementById("passwordInput")! as HTMLInputElement;
+    const name: HTMLInputElement = document.getElementById("nameInput")! as HTMLInputElement;
+    const confirmPassword: HTMLInputElement = document.getElementById("passwordConfirmInput")! as HTMLInputElement;
+    const registerError: HTMLElement = document.getElementById("registerError")!;
+
+    const data = {
+      email: email.value,
+      name: name.value,
+      password: password.value,
+      confirmPassword: confirmPassword.value
+    };
+
+    fetch(registerApiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data),
+    }).then((response) => {
+      if (response.status === 200) {
+        window.location.href = router.resolve({name: "messages"}).href;
+      } else {
+        registerError.classList.remove("d-none");
+      }
+    });
   });
 });
 </script>

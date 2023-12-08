@@ -8,6 +8,9 @@
   </div>
   <form class="form" data-form-type="register">
     <h4>Créer un compte</h4>
+    <div id="registerError" class="alert alert-danger d-none">
+      Erreur lors de la création du compte
+    </div>
 
     <div class="my-3">
       <div class="mb-3">

@@ -10,8 +10,6 @@ const dbUser = process.env.MYSQL_USER as string;
 const dbPassword = process.env.MYSQL_PASSWORD;
 const dbHost = process.env.MYSQL_HOST;
 
-console.log(dbName, dbUser, dbPassword, dbHost);
-
 const sequelizeConnection = new Sequelize(dbName, dbUser, dbPassword, {
     host: dbHost,
     dialect: 'mariadb',

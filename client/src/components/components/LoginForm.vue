@@ -6,8 +6,11 @@
   <div class="logo">
     <img src="../../assets/images/Logo-Large-White.avif" alt="logo"/>
   </div>
-  <form class="form" data-form-type="login">
+  <form id="loginForm" class="form" data-form-type="login">
     <h4>Connexion</h4>
+    <div id="loginError" class="alert alert-danger d-none">
+      Erreur lors de la création du compte
+    </div>
 
     <div class="my-3">
       <div class="form-floating mb-3">
