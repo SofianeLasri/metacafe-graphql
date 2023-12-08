@@ -14,25 +14,25 @@
 
     <div class="my-3">
       <div class="mb-3">
-        <label for="emailInput" class="form-label">Adresse e-mail</label>
-        <input type="email" class="form-control" id="emailInput" data-form-type="email" name="email"
+        <label for="registerEmailInput" class="form-label">Adresse e-mail</label>
+        <input type="email" class="form-control" id="registerEmailInput" data-form-type="email" name="email"
                placeholder="gordon.freeman@blackmesa.us" required>
       </div>
       <div class="mb-3">
-        <label for="passwordInput" class="form-label">Mot de passe</label>
-        <input type="password" class="form-control mb-2" id="passwordInput" data-form-type="password" name="password"
+        <label for="registerPasswordInput" class="form-label">Mot de passe</label>
+        <input type="password" class="form-control mb-2" id="registerPasswordInput" data-form-type="password" name="password"
                placeholder="Mot de passe" required>
-        <input type="password" class="form-control" id="passwordConfirmInput" data-form-type="password"
-               name="passwordConfirm" placeholder="Confirmer le mot de passe" required>
+        <input type="password" class="form-control" id="registerPasswordConfirmInput" data-form-type="password"
+               name="registerPasswordConfirm" placeholder="Confirmer le mot de passe" required>
       </div>
       <div class="mb-3">
-        <label for="nameInput" class="form-label">Nom d'utilisateur</label>
-        <input type="text" class="form-control" id="nameInput" data-form-type="username" name="name"
+        <label for="registerNameInput" class="form-label">Nom d'utilisateur</label>
+        <input type="text" class="form-control" id="registerNameInput" data-form-type="username" name="name"
                placeholder="Gordon Freeman" required>
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Se connecter</button>
+    <button type="submit" class="btn btn-primary">S'inscrire</button>
     <div class="mt-3 d-flex flex-column text-center">
       <a href="#" class="small text-muted">Mot de passe oublié ?</a>
     </div>

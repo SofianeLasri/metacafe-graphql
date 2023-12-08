@@ -24,6 +24,10 @@ authRouter.post('/logout', (req, res) => {
 
 authRouter.post('/register', jsonParser, async (req, res) => {
     let body = req.body;
+    if(!body.name || !body.email || !body.password || body.name === '' || body.email === '' || body.password === '') {
+        return res.status(400).send({message: 'Missing parameters'});
+    }
+
     body.password = await userController.hashPassword(body.password);
 
     const payload:CreateUserDTO = req.body;

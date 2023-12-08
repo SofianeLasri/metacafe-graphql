@@ -9,19 +9,22 @@
   <form id="loginForm" class="form" data-form-type="login">
     <h4>Connexion</h4>
     <div id="loginError" class="alert alert-danger d-none">
-      Erreur lors de la création du compte
+      Erreur lors de la connexion
+    </div>
+    <div id="registerSuccess" class="alert alert-success d-none">
+      Compte créé avec succès, vous pouvez vous connecter
     </div>
 
     <div class="my-3">
       <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="emailInput" data-form-type="email"
+        <input type="email" class="form-control" id="loginEmailInput" data-form-type="email"
                placeholder="gordon.freeman@blackmesa.us" required>
-        <label for="emailInput">Adresse e-mail</label>
+        <label for="loginEmailInput">Adresse e-mail</label>
       </div>
       <div class="form-floating">
-        <input type="password" class="form-control" id="passwordInput" data-form-type="password"
+        <input type="password" class="form-control" id="loginPasswordInput" data-form-type="password"
                placeholder="Mot de passe required">
-        <label for="passwordInput">Mot de passe</label>
+        <label for="loginPasswordInput">Mot de passe</label>
       </div>
     </div>
 

@@ -28,8 +28,8 @@ onMounted(() => {
 
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const email: HTMLInputElement = document.getElementById("emailInput")! as HTMLInputElement;
-    const password: HTMLInputElement = document.getElementById("passwordInput")! as HTMLInputElement;
+    const email: HTMLInputElement = document.getElementById("loginEmailInput")! as HTMLInputElement;
+    const password: HTMLInputElement = document.getElementById("loginPasswordInput")! as HTMLInputElement;
     const loginError: HTMLElement = document.getElementById("loginError")!;
 
     const data = {
@@ -48,18 +48,19 @@ onMounted(() => {
         window.location.href = router.resolve({name: "messages"}).href;
       } else {
         loginError.classList.remove("d-none");
-        console.log(response);
+        console.log(response.text());
       }
     });
   });
 
   registerForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const email: HTMLInputElement = document.getElementById("emailInput")! as HTMLInputElement;
-    const password: HTMLInputElement = document.getElementById("passwordInput")! as HTMLInputElement;
-    const name: HTMLInputElement = document.getElementById("nameInput")! as HTMLInputElement;
-    const confirmPassword: HTMLInputElement = document.getElementById("passwordConfirmInput")! as HTMLInputElement;
+    const email: HTMLInputElement = document.getElementById("registerEmailInput")! as HTMLInputElement;
+    const password: HTMLInputElement = document.getElementById("registerPasswordInput")! as HTMLInputElement;
+    const name: HTMLInputElement = document.getElementById("registerNameInput")! as HTMLInputElement;
+    const confirmPassword: HTMLInputElement = document.getElementById("registerPasswordConfirmInput")! as HTMLInputElement;
     const registerError: HTMLElement = document.getElementById("registerError")!;
+    const registerSuccess: HTMLElement = document.getElementById("registerSuccess")!;
 
     const data = {
       email: email.value,
@@ -67,6 +68,11 @@ onMounted(() => {
       password: password.value,
       confirmPassword: confirmPassword.value
     };
+
+    if(password.value !== confirmPassword.value) {
+      registerError.classList.remove("d-none");
+      return;
+    }
 
     fetch(registerApiUrl, {
       method: "POST",
@@ -76,10 +82,13 @@ onMounted(() => {
       body: JSON.stringify(data),
     }).then((response) => {
       if (response.status === 200) {
-        window.location.href = router.resolve({name: "messages"}).href;
+        registerSuccess.classList.remove("d-none");
+        registerError.classList.add("d-none");
+        registerForm.classList.add("d-none");
+        loginForm.classList.remove("d-none");
       } else {
         registerError.classList.remove("d-none");
-        console.log(response);
+        console.log(response.body);
       }
     });
   });
