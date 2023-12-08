@@ -1,9 +1,9 @@
-![banner.jpg](art%2Fbanner.jpg)
+![banner.jpg](art/banner.jpg)
 
 # Information
 
 Métacafé est un projet scolaire dont l'objectif est de réaliser un projet avec Vue.js et Typescript, en utilisant
-Express.js.
+Express.js. Le projet est réalisé par [Sofiane Lasri](https://sofianelasri.fr).
 
 # Fonctionnalités
 
@@ -23,3 +23,7 @@ container docker, puis `npm run start` pour lancer le site.
 **Note:** En raison des règles CORS, il est **fortement** recommandé d'accéder au site via l'adresse
 `http://localhost:5173`. La liste des adresses autorisées est disponible au début de la
 méthode `configureMiddlewares()` du fichier `server/src/api/express-server.ts`.
+
+**Note 2:** À la date du 8 décembre 2023, l'utilisation des images au format AVIF rend le site incompatible avec le
+navigateur Microsoft Edge. Veuillez vour référer au site [caniuse.com](https://caniuse.com/avif) pour plus
+d'informations sur l'état de son support.
