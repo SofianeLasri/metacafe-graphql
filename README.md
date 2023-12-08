@@ -2,11 +2,13 @@
 
 # Information
 
-Métacafé est un projet scolaire dont l'objectif est de réaliser un projet avec Vue.js et Typescript, en utilisant Express.js.
+Métacafé est un projet scolaire dont l'objectif est de réaliser un projet avec Vue.js et Typescript, en utilisant
+Express.js.
 
 # Fonctionnalités
 
 Voici la liste des fonctionnalité que doit posséder ce projet :
+
 - Pouvoir envoyer des messages textuels à ses contacts
 - Pouvoir envoyer des messages vocaux à ses contacts
 - Pouvoir envoyer des images à ses contacts
@@ -15,4 +17,9 @@ Voici la liste des fonctionnalité que doit posséder ce projet :
 
 # Installation
 
-Lancez la commande `npm run setup` pour installer les dépendances du projet, `docker compose up -d` pour créer le container docker, puis `npm run start` pour lancer le site.
+Lancez la commande `npm run setup` pour installer les dépendances du projet, `docker compose up -d` pour créer le
+container docker, puis `npm run start` pour lancer le site.
+
+**Note:** En raison des règles CORS, il est **fortement** recommandé d'accéder au site via l'adresse
+`http://localhost:5173`. La liste des adresses autorisées est disponible au début de la
+méthode `configureMiddlewares()` du fichier `server/src/api/express-server.ts`.
