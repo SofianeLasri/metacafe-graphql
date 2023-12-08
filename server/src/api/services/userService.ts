@@ -24,3 +24,6 @@ export const deleteById = (id: number): Promise<boolean> => {
 export const getAll = (filters: GetAllUsersFilters): Promise<UserOutput[]> => {
     return userDal.getAll(filters)
 }
+export async function hashPassword(password: string): Promise<string> {
+    return await userDal.hashPassword(password);
+}

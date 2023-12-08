@@ -1,6 +1,8 @@
 import {Op} from 'sequelize'
-import User, {UserInput, UserOutput} from "../models/User";
+import {User} from "../models";
+import {UserInput, UserOutput} from "../models/User";
 import {GetAllUsersFilters} from "./types";
+import bcrypt from "bcrypt";
 
 export const create = async (payload: UserInput): Promise<UserOutput> => {
     return await User.create(payload);
@@ -54,3 +56,8 @@ export const getAll = async (filters?: GetAllUsersFilters): Promise<UserOutput[]
 
     return User.findAll(queryOptions);
 };
+
+export const hashPassword = async (password: string): Promise<string> => {
+    const saltRounds: number = 10;
+    return await bcrypt.hash(password, saltRounds);
+}

@@ -12,8 +12,11 @@ interface UserAttributes {
     deletedAt?: Date;
 }
 
-export interface UserInput extends Optional<UserAttributes, 'id'> {}
-export interface UserOutput extends Required<UserAttributes> {}
+export interface UserInput extends Optional<UserAttributes, 'id'> {
+}
+
+export interface UserOutput extends Required<UserAttributes> {
+}
 
 class User extends Model<UserAttributes, UserInput> implements UserAttributes {
     public id!: number;
