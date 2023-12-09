@@ -6,6 +6,7 @@ export class ExpressApplication {
     private port!: string;
     private server!: ExpressServer;
     private sessionSecret!: string;
+    private corsAllowedOrigins!: string[];
 
     constructor() {
         this.configureApplication();
@@ -31,10 +32,11 @@ export class ExpressApplication {
     private configureEnvVariables(): void {
         this.port = this.getPort();
         this.sessionSecret = ExpressApplication.getSessionSecret();
+        this.corsAllowedOrigins = this.getCorsAllowedOrigins();
     }
 
     private configureServer(): void {
-        this.server = new ExpressServer(this.port, this.sessionSecret);
+        this.server = new ExpressServer(this.port, this.sessionSecret, this.corsAllowedOrigins);
     }
 
     private getPort(): string {
@@ -53,6 +55,15 @@ export class ExpressApplication {
         }
 
         return sessionSecret;
+    }
+
+    private getCorsAllowedOrigins(): string[] {
+        const corsAllowedOrigins = process.env.CORS_ALLOWED_ORIGINS;
+        if (!corsAllowedOrigins) {
+            throw new Error('No cors allowed origins were found in env file.');
+        }
+
+        return corsAllowedOrigins.split(',');
     }
 
     public static getSessionDuration(): number {

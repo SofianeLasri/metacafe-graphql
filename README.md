@@ -21,8 +21,9 @@ Lancez la commande `npm run setup` pour installer les dépendances du projet, `d
 container docker, puis `npm run start` pour lancer le site.
 
 **Note:** En raison des règles CORS, il est **fortement** recommandé d'accéder au site via l'adresse
-`http://localhost:5173`. La liste des adresses autorisées est disponible au début de la
-méthode `configureMiddlewares()` du fichier `server/src/api/express-server.ts`.
+`http://localhost:5173`. La liste des adresses autorisées est disponible dans le fichier environnement. La
+variable `CORS_ALLOWED_ORIGINS` peut contenir plusieurs adresses, séparées par des virgules. La
+variable `VITE_BACKEND_URL` doit contenir l'adresse du backend, sans le slash final. Pas de liste.
 
 **Note 2:** À la date du 8 décembre 2023, l'utilisation des images au format AVIF rend le site incompatible avec le
 navigateur Microsoft Edge. Veuillez vour référer au site [caniuse.com](https://caniuse.com/avif) pour plus

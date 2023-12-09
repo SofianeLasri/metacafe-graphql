@@ -10,13 +10,16 @@ export class ExpressServer {
     private express: Express = express();
     private readonly port: string;
     private readonly secret: string;
+    private readonly corsAllowedOrigins: string[];
 
     constructor(
         port: string,
         secret: string,
+        allowedOrigins: string[] = ['http://localhost:5173']
     ) {
         this.port = port;
         this.secret = secret;
+        this.corsAllowedOrigins = allowedOrigins;
         this.configureMiddlewares();
         this.configureRoutes();
     }
@@ -32,13 +35,11 @@ export class ExpressServer {
     }
 
     private configureMiddlewares(): void {
-        const allowedOrigins = ['http://localhost:5173'];
-
         const options: cors.CorsOptions = {
-            origin: allowedOrigins,
+            origin: this.corsAllowedOrigins,
             methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
             credentials: true,
-        };
+        }
 
         this.express.use(cors(options));
 
