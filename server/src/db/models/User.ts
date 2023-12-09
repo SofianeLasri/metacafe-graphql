@@ -12,6 +12,7 @@ interface UserAttributes {
     name: string;
     email: string;
     password: string;
+    profilePicture?: Attachment | null;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
@@ -28,6 +29,7 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
     public name!: string;
     public email!: string;
     public password!: string;
+    public profilePicture!: Attachment | null;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -65,6 +67,14 @@ User.init({
         set(value: string) {
             const hash = bcrypt.hashSync(value, 10);
             this.setDataValue('password', hash);
+        },
+    },
+    profilePicture: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true,
+        references: {
+            model: "attachments",
+            key: 'id',
         },
     },
 }, {
