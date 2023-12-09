@@ -1,10 +1,10 @@
 import cors from 'cors';
 import express, {Express} from 'express';
-import routes from "./routes";
+import routes from "../routes";
 import session from 'express-session';
 import passport from "passport";
 import {Strategy as LocalStrategy} from 'passport-local';
-import User from "../db/models/User";
+import User from "../../db/models/User";
 
 export class ExpressServer {
     private express: Express = express();
@@ -35,7 +35,9 @@ export class ExpressServer {
         const allowedOrigins = ['http://localhost:5173'];
 
         const options: cors.CorsOptions = {
-            origin: allowedOrigins
+            origin: allowedOrigins,
+            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+            credentials: true,
         };
 
         this.express.use(cors(options));

@@ -2,7 +2,7 @@ import {Request, Response, Router} from 'express';
 import * as userController from "../controllers/user";
 import {CreateUserDTO, FilterUsersDTO, UpdateUserDTO} from "../dataTransferObjects/user.dto";
 import {User} from "../interfaces";
-import {isAuthenticated} from "../middlewares/authentication";
+import {isAuthenticated} from "../infrastructure/authentication";
 
 const usersRouter = Router();
 usersRouter.get('/:id', isAuthenticated, async (req: Request, res: Response) => {

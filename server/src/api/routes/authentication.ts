@@ -2,35 +2,50 @@ import {Router} from "express";
 import passport from "passport";
 import {CreateUserDTO} from "../dataTransferObjects/user.dto";
 import * as userController from "../controllers/user";
-import {jsonParser} from "../middlewares/authentication";
-import { User } from "../interfaces";
+import {User} from "../interfaces";
+import {generateAuthToken, jsonParser} from "../infrastructure/authentication";
 
 const authRouter = Router();
 
-authRouter.post('/login', jsonParser, passport.authenticate('local'), (req, res) => {
-    // Cette fonction est appelée lorsque l'authentification réussit
-    res.json({ user: req.user });
+authRouter.post('/login', jsonParser, (req, res) => {
+    passport.authenticate('local', (err: any, user: User, info: any) => {
+        if (err) {
+            return res.status(500).json({message: err});
+        }
+        if (!user) {
+            return res.status(401).json({message: info.message});
+        }
+        req.logIn(user, (err) => {
+            if (err) {
+                return res.status(500).json({message: err});
+            }
+        });
+        console.log('login');
+
+        const token: string = generateAuthToken(user);
+        res.status(200).json({token: token});
+    })(req, res);
 });
 
 // Route de déconnexion
 authRouter.post('/logout', (req, res) => {
     req.logout(function (err) {
         if (err) {
-            return res.status(500).json({ message: 'Erreur lors de la déconnexion' });
+            return res.status(500).json({message: 'Erreur lors de la déconnexion'});
         }
     });
-    res.json({ message: 'Déconnexion réussie' });
+    res.json({message: 'Déconnexion réussie'});
 });
 
 authRouter.post('/register', jsonParser, async (req, res) => {
     let body = req.body;
-    if(!body.name || !body.email || !body.password || body.name === '' || body.email === '' || body.password === '') {
+    if (!body.name || !body.email || !body.password || body.name === '' || body.email === '' || body.password === '') {
         return res.status(400).send({message: 'Missing parameters'});
     }
 
     body.password = await userController.hashPassword(body.password);
 
-    const payload:CreateUserDTO = req.body;
+    const payload: CreateUserDTO = req.body;
     try {
         const result: User = await userController.create(payload);
         res.status(200).send(result);

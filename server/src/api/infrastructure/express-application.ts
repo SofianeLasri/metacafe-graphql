@@ -1,6 +1,6 @@
 import {ExpressServer} from './express-server';
 import * as dotenv from 'dotenv';
-import dbInit from "../db/inits";
+import dbInit from "../../db/inits";
 
 export class ExpressApplication {
     private port!: string;
@@ -30,7 +30,7 @@ export class ExpressApplication {
 
     private configureEnvVariables(): void {
         this.port = this.getPort();
-        this.sessionSecret = this.getSessionSecret();
+        this.sessionSecret = ExpressApplication.getSessionSecret();
     }
 
     private configureServer(): void {
@@ -46,12 +46,21 @@ export class ExpressApplication {
         return port;
     }
 
-    private getSessionSecret(): string {
+    public static getSessionSecret(): string {
         const sessionSecret = process.env.SESSION_SECRET;
         if (!sessionSecret) {
             throw new Error('No session secret was found in env file.');
         }
 
         return sessionSecret;
+    }
+
+    public static getSessionDuration(): number {
+        const sessionDuration = process.env.SESSION_DURATION;
+        if (!sessionDuration) {
+            throw new Error('No session duration was found in env file.');
+        }
+
+        return Number(sessionDuration);
     }
 }

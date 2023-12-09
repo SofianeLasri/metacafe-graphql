@@ -1,3 +1,3 @@
-import {ExpressApplication} from "./api/express-application";
+import {ExpressApplication} from "./api/infrastructure/express-application";
 
 new ExpressApplication().bootstrap();
