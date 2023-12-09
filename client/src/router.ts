@@ -1,10 +1,12 @@
 import {createRouter, createWebHistory, NavigationGuardNext, RouteLocationNormalized, Router} from 'vue-router';
 import HelloWorld from "./components/pages/Index.vue";
 import Messages from "./components/pages/Messages.vue";
+import Logout from "~@/components/pages/Logout.vue";
 
 const routes = [
     {path: '/', component: HelloWorld, name: 'home'},
-    {path: '/messages', component: Messages, name: 'messages'}
+    {path: '/messages', component: Messages, name: 'messages'},
+    {path: '/logout', component: Logout, name: 'logout'},
 ];
 
 const router: Router = createRouter({

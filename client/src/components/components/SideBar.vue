@@ -77,7 +77,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <button class="disconnect-btn" id="disconnectBtn">Déconnexion</button>
+    <button class="disconnect-btn" id="disconnectBtn" @click="$router.push('logout')">Déconnexion</button>
   </div>
 </template>
 

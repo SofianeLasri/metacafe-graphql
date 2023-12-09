@@ -3,7 +3,7 @@ import passport from "passport";
 import {CreateUserDTO} from "../dataTransferObjects/user.dto";
 import * as userController from "../controllers/user";
 import {User} from "../interfaces";
-import {generateAuthToken, jsonParser} from "../infrastructure/authentication";
+import {generateAuthToken, isAuthenticated, jsonParser} from "../infrastructure/authentication";
 
 const authRouter = Router();
 
@@ -32,7 +32,7 @@ authRouter.post('/login', jsonParser, (req, res) => {
 });
 
 // Route de déconnexion
-authRouter.post('/logout', (req, res) => {
+authRouter.post('/logout', isAuthenticated, (req, res) => {
     req.logout(function (err) {
         if (err) {
             return res.status(500).json({message: 'Erreur lors de la déconnexion'});
