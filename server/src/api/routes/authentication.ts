@@ -8,6 +8,10 @@ import {generateAuthToken, jsonParser} from "../infrastructure/authentication";
 const authRouter = Router();
 
 authRouter.post('/login', jsonParser, (req, res) => {
+    if (req.body.email === 'no-reply@metacafe.com') {
+        return res.status(401).json({message: 'Vous ne pouvez pas vous connecter avec ce compte'});
+    }
+
     passport.authenticate('local', (err: any, user: User, info: any) => {
         if (err) {
             return res.status(500).json({message: err});
@@ -42,8 +46,6 @@ authRouter.post('/register', jsonParser, async (req, res) => {
     if (!body.name || !body.email || !body.password || body.name === '' || body.email === '' || body.password === '') {
         return res.status(400).send({message: 'Missing parameters'});
     }
-
-    body.password = await userController.hashPassword(body.password);
 
     const payload: CreateUserDTO = req.body;
     try {

@@ -1,6 +1,11 @@
-import {DataTypes, Model, Optional} from "sequelize";
+import {DataTypes, Model, Optional, HasManyGetAssociationsMixin} from "sequelize";
 import sequelizeConnection from "../config";
 import bcrypt from 'bcrypt';
+import Friend from "./Friend";
+import Story from "./Story";
+import Message from "./Message";
+import CenterOfInterest from "./CenterOfInterest";
+import Attachment from "./Attachment";
 
 interface UserAttributes {
     id: number;
@@ -31,6 +36,12 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
     public validPassword(password: string): boolean {
         return bcrypt.compareSync(password, this.password);
     }
+
+    public getFriends!: HasManyGetAssociationsMixin<Friend>;
+    public getStories!: HasManyGetAssociationsMixin<Story>;
+    public getSentMessages!: HasManyGetAssociationsMixin<Message>;
+    public getReceivedMessages!: HasManyGetAssociationsMixin<Message>;
+    public getCentersOfInterest!: HasManyGetAssociationsMixin<CenterOfInterest>;
 }
 
 User.init({
@@ -51,12 +62,41 @@ User.init({
     password: {
         type: DataTypes.STRING(128),
         allowNull: false,
+        set(value: string) {
+            const hash = bcrypt.hashSync(value, 10);
+            this.setDataValue('password', hash);
+        },
     },
 }, {
     timestamps: true,
     tableName: 'users',
     sequelize: sequelizeConnection,
     paranoid: true
+});
+
+Story.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'user',
+});
+
+User.hasMany(Message, {
+    foreignKey: 'senderUserId',
+    as: 'sentMessages',
+});
+
+Message.belongsTo(User, {
+    foreignKey: 'senderUserId',
+    as: 'sender',
+});
+
+User.hasMany(Message, {
+    foreignKey: 'receiverUserId',
+    as: 'receivedMessages',
+});
+
+Message.belongsTo(User, {
+    foreignKey: 'receiverUserId',
+    as: 'receiver',
 });
 
 export default User;

@@ -27,7 +27,3 @@ export const deleteById = async(id: number): Promise<boolean> => {
 export const getAll = async(filters: FilterUsersDTO): Promise<User[]> => {
     return (await service.getAll(filters)).map(mapper.toUser);
 }
-
-export const hashPassword = async(password: string): Promise<string> => {
-    return await service.hashPassword(password);
-}
