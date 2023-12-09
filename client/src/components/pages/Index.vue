@@ -7,6 +7,7 @@ import router from "~@/router.ts";
 const serverBaseUrl = import.meta.env.VITE_BACKEND_URL as string;
 const loginApiUrl = `${serverBaseUrl}/api/auth/login`;
 const registerApiUrl = `${serverBaseUrl}/api/auth/register`;
+const getUserInfosApiUrl = `${serverBaseUrl}/api/user/me`;
 
 function handleLoginSubmit(e: SubmitEvent, loginEmailInput: HTMLInputElement, loginPasswordInput: HTMLInputElement, loginError: HTMLElement) {
   e.preventDefault();
@@ -26,7 +27,7 @@ function handleLoginSubmit(e: SubmitEvent, loginEmailInput: HTMLInputElement, lo
     if (response.status === 200) {
       const responseJson = await response.json();
       localStorage.setItem("token", responseJson.token);
-      window.location.href = router.resolve({name: "messages"}).href;
+      handlePostLogin();
     } else {
       const isResponseJson = response.headers.get("content-type")?.includes("application/json");
       if (isResponseJson) {
@@ -70,6 +71,34 @@ function handleRegistrationSubmit(e: SubmitEvent, registerEmailInput: HTMLInputE
     } else {
       registerError.classList.remove("d-none");
       console.log(response.body);
+    }
+  });
+}
+
+function handlePostLogin() {
+  fetch(getUserInfosApiUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    }
+  }).then(async (response) => {
+    if (response.status === 200) {
+      const responseJson = await response.json();
+
+      if(responseJson.hasSeenIntro) {
+        window.location.href = router.resolve({name: "messages"}).href;
+      } else {
+        window.location.href = router.resolve({name: "setup"}).href;
+      }
+    } else {
+      const isResponseJson = response.headers.get("content-type")?.includes("application/json");
+      if (isResponseJson) {
+        const responseJson = await response.json();
+        console.log(responseJson);
+      } else {
+        console.log("Une erreur est survenue");
+      }
     }
   });
 }

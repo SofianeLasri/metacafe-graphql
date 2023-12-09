@@ -2,9 +2,34 @@ import {Request, Response, Router} from 'express';
 import * as userController from "../controllers/user";
 import {CreateUserDTO, FilterUsersDTO, UpdateUserDTO} from "../dataTransferObjects/user.dto";
 import {User} from "../interfaces";
-import {isAuthenticated} from "../infrastructure/authentication";
+import {isAuthenticated, jsonParser} from "../infrastructure/authentication";
 
 const usersRouter = Router();
+
+usersRouter.get('/me', isAuthenticated, async (req: Request, res: Response) => {
+    let user: User = req.user as User;
+    user = await userController.getById(user.id);
+
+    let ResponseUser: any = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        hasSeenIntro: user.hasSeenIntro,
+    }
+
+    return res.status(200).send(ResponseUser);
+});
+usersRouter.put('/me', isAuthenticated, jsonParser, async (req: Request, res: Response) => {
+    let user: User = req.user as User;
+    user = await userController.getById(user.id);
+
+    console.log(req.body);
+
+    const payload: UpdateUserDTO = req.body;
+
+    const result: User = await userController.update(user.id, payload);
+    return res.status(201).send(result);
+});
 usersRouter.get('/:id', isAuthenticated, async (req: Request, res: Response) => {
     const id: number = Number(req.params.id);
     const result: User = await userController.getById(id);

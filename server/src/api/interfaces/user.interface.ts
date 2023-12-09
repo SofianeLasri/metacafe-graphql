@@ -6,6 +6,7 @@ export interface User {
     email: string;
     password: string;
     profilePicture?: Attachment | null;
+    hasSeenIntro?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;

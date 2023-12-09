@@ -28,7 +28,7 @@ export const generateAuthToken = (user: User) => {
     const secretKey: string = ExpressApplication.getSessionSecret();
     const sessionDuration: number = ExpressApplication.getSessionDuration();
 
-    return jwt.sign({email: user.email}, secretKey, {
+    return jwt.sign({id: user.id, email: user.email, name: user.name}, secretKey, {
         expiresIn: sessionDuration,
     });
 }

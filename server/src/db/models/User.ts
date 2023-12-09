@@ -13,6 +13,7 @@ interface UserAttributes {
     email: string;
     password: string;
     profilePicture?: Attachment | null;
+    hasSeenIntro?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
@@ -30,6 +31,8 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
     public email!: string;
     public password!: string;
     public profilePicture!: Attachment | null;
+
+    public hasSeenIntro!: boolean;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -77,6 +80,11 @@ User.init({
             key: 'id',
         },
     },
+    hasSeenIntro: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    }
 }, {
     timestamps: true,
     tableName: 'users',
