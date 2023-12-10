@@ -29,7 +29,7 @@ export const create = async (userId: number, file: Express.Multer.File): Promise
         console.error(error);
         throw new Error('Failed to create and compress attachment');
     }
-};
+}
 
 export const update = async (id: number, payload: Partial<AttachmentInput>): Promise<AttachmentOutput> => {
     const attachment: Attachment | null = await Attachment.findByPk(id);
