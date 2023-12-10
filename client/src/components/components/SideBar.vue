@@ -63,7 +63,7 @@ onMounted(() => {
         />
       </div>
 
-      <SearchZone />
+      <SearchZone class="p-2" placeholder="Rechercher un utilisateur" />
     </div>
 
     <div class="user-list">

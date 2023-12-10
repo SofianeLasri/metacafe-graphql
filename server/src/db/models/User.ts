@@ -73,11 +73,7 @@ User.init({
     },
     profilePicture: {
         type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: true,
-        references: {
-            model: "attachments",
-            key: 'id',
-        },
+        allowNull: true
     },
     hasSeenIntro: {
         type: DataTypes.BOOLEAN,

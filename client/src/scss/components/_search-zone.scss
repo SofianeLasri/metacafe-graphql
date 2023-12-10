@@ -2,44 +2,42 @@
 @use "sass:color";
 
 .search-zone {
-    padding: map.get($spacers, 2);
+  .search-bar {
+    display: flex;
+    color: $text-muted;
 
-    .search-bar {
-        display: flex;
-        color: $text-muted;
+    padding: map.get($spacers, 1);
+    border-radius: $border-radius;
+    border-bottom: $border-width solid $dark;
+    box-shadow: 0 0 2px 0 color.adjust($black, $alpha: -0.5);
 
-        padding: map.get($spacers, 1);
-        border-radius: $border-radius;
-        border-bottom: $border-width solid $dark;
-        box-shadow: 0 0 2px 0 color.adjust($black, $alpha: -0.5);
-
-        &:focus-within {
-            border-bottom: map.get($border-widths, 3) solid $primary;
-        }
-
-        > * {
-            height: 1.5rem;
-        }
-
-        .icon-prepend {
-            aspect-ratio: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            svg {
-                width: .7rem;
-                height: .7rem;
-            }
-        }
-
-        input {
-            flex-grow: 1;
-            border: none;
-
-            &:focus {
-                outline: none;
-            }
-        }
+    &:focus-within {
+      border-bottom: map.get($border-widths, 3) solid $primary;
     }
+
+    > * {
+      height: 1.5rem;
+    }
+
+    .icon-prepend {
+      aspect-ratio: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        width: .7rem;
+        height: .7rem;
+      }
+    }
+
+    input {
+      flex-grow: 1;
+      border: none;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
 }

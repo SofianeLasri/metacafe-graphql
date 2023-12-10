@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {onMounted} from "vue";
 import router from "~@/router.ts";
+import SearchZone from "~@/components/components/SearchZone.vue";
+import InteractiveBadge from "~@/components/components/InteractiveBadge.vue";
 
 const serverBaseUrl: string = import.meta.env.VITE_BACKEND_URL as string;
 const updateProfileApiUrl: string = `${serverBaseUrl}/api/user/me`;
@@ -12,8 +14,8 @@ let userProfilePictureUrl: string = localStorage.getItem("profilePictureUrl")!;
 onMounted(() => {
   const setProfilePicturePopup: HTMLElement = document.getElementById("setProfilePicturePopup")!;
   const profilePicture: HTMLElement = document.getElementById("profilePicture")!;
-  const denyBtn: HTMLButtonElement = document.getElementById("denyBtn")! as HTMLButtonElement;
-  const laterBtn: HTMLButtonElement = document.getElementById("laterBtn")! as HTMLButtonElement;
+  const denyPpBtn: HTMLButtonElement = document.getElementById("denyPpBtn")! as HTMLButtonElement;
+  const laterPpBtn: HTMLButtonElement = document.getElementById("laterPpBtn")! as HTMLButtonElement;
 
   profilePicture.addEventListener("click", () => {
     // Ouvrir la boîte de dialogue pour sélectionner une image
@@ -62,7 +64,7 @@ onMounted(() => {
     }
   };
 
-  denyBtn.addEventListener("click", () => {
+  denyPpBtn.addEventListener("click", () => {
     fetch(updateProfileApiUrl, {
       method: "PUT",
       headers: {
@@ -88,14 +90,14 @@ onMounted(() => {
     });
   });
 
-  laterBtn.addEventListener("click", () => {
+  laterPpBtn.addEventListener("click", () => {
     window.location.href = router.resolve({name: "messages"}).href;
   });
 });
 </script>
 
 <template>
-  <div id="setProfilePicturePopup" class="popup-card">
+  <div id="setProfilePicturePopup" class="popup-card d-none">
     <div id="profilePicture" class="profile-picture"
          :style="{'background-image': `url(${userProfilePictureUrl})`}"></div>
 
@@ -105,8 +107,21 @@ onMounted(() => {
     </div>
 
     <div class="actions">
-      <button id="denyBtn" type="button" class="negative">Non</button>
-      <button id="laterBtn" type="button" class="neutral">Plus-tard</button>
+      <button id="denyPpBtn" type="button" class="negative">Non</button>
+      <button id="laterPpBtn" type="button" class="neutral">Plus-tard</button>
+    </div>
+  </div>
+  <div id="setCenterOfInterestsPopup" class="popup-card align-items-start">
+    <div class="content">
+      <h4>Qu'est-ce qui vous passionne ?</h4>
+      <div class="mt-3">
+        <SearchZone placeholder="Rechercher un centre d'intérêt"/>
+        <p class="text-muted small mt-1">Choisissez au moins 3 centres d'intérêt.</p>
+      </div>
+
+      <div id="centersList d-flex flex-wrap">
+        <InteractiveBadge text="Jeux Vidéos"/>
+      </div>
     </div>
   </div>
 </template>
