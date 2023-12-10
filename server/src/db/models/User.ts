@@ -5,14 +5,13 @@ import Friend from "./Friend";
 import Story from "./Story";
 import Message from "./Message";
 import CenterOfInterest from "./CenterOfInterest";
-import Attachment from "./Attachment";
 
 interface UserAttributes {
     id: number;
     name: string;
     email: string;
     password: string;
-    profilePicture?: Attachment | null;
+    profilePicture?: number | null;
     hasSeenIntro?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
@@ -30,7 +29,7 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
     public name!: string;
     public email!: string;
     public password!: string;
-    public profilePicture!: Attachment | null;
+    public profilePicture!: number | null;
 
     public hasSeenIntro!: boolean;
 

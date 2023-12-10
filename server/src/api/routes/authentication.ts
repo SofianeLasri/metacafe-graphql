@@ -5,9 +5,9 @@ import * as userController from "../controllers/user";
 import {User} from "../interfaces";
 import {generateAuthToken, isAuthenticated, jsonParser} from "../infrastructure/authentication";
 
-const authRouter = Router();
+const router: Router = Router();
 
-authRouter.post('/login', jsonParser, (req, res) => {
+router.post('/login', jsonParser, (req, res) => {
     if (req.body.email === 'no-reply@metacafe.com') {
         return res.status(401).json({message: 'Vous ne pouvez pas vous connecter avec ce compte'});
     }
@@ -32,7 +32,7 @@ authRouter.post('/login', jsonParser, (req, res) => {
 });
 
 // Route de déconnexion
-authRouter.post('/logout', isAuthenticated, (req, res) => {
+router.post('/logout', isAuthenticated, (req, res) => {
     req.logout(function (err) {
         if (err) {
             return res.status(500).json({message: 'Erreur lors de la déconnexion'});
@@ -41,7 +41,7 @@ authRouter.post('/logout', isAuthenticated, (req, res) => {
     res.json({message: 'Déconnexion réussie'});
 });
 
-authRouter.post('/register', jsonParser, async (req, res) => {
+router.post('/register', jsonParser, async (req, res) => {
     let body = req.body;
     if (!body.name || !body.email || !body.password || body.name === '' || body.email === '' || body.password === '') {
         return res.status(400).send({message: 'Missing parameters'});
@@ -57,4 +57,4 @@ authRouter.post('/register', jsonParser, async (req, res) => {
     return res;
 });
 
-export default authRouter;
+export default router;

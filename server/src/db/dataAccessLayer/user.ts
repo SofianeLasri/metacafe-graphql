@@ -2,7 +2,8 @@ import {Op} from 'sequelize'
 import {User} from "../models";
 import {UserInput, UserOutput} from "../models/User";
 import {GetAllUsersFilters} from "./types";
-import bcrypt from "bcrypt";
+import * as AttachmentDAL from './attachment';
+import {AttachmentOutput} from "../models/Attachment";
 
 export const create = async (payload: UserInput): Promise<UserOutput> => {
     return await User.create(payload);
@@ -13,6 +14,16 @@ export const update = async (id: number, payload: Partial<UserInput>): Promise<U
     if (!user) throw new Error('User not found');
     return await user.update(payload);
 }
+
+export const updateProfilePicture = async (userId: number, profilePicture: Express.Multer.File): Promise<UserOutput> => {
+    try {
+        const attachment: AttachmentOutput = await AttachmentDAL.create(userId, profilePicture);
+        return await update(userId, {profilePicture: attachment.id});
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to update user profile picture');
+    }
+};
 
 export const getById = async (id: number): Promise<UserOutput> => {
     const user: User | null = await User.findByPk(id);

@@ -1,19 +1,44 @@
 import Attachment, {AttachmentInput, AttachmentOutput} from "../models/Attachment";
 import {GetAllAttachmentsFilters} from "./types";
 import {Op} from "sequelize";
+import sharp from 'sharp';
+import fs from 'fs/promises';
 
-export const create = async (payload: AttachmentInput): Promise<AttachmentOutput> => {
-    return await Attachment.create(payload);
-}
+export const create = async (userId: number, file: Express.Multer.File): Promise<AttachmentOutput> => {
+    try {
+        const compressedImageBuffer: Buffer = await sharp(file.path)
+            .resize({width: 512, height: 512})
+            .avif({quality: 80})
+            .toBuffer();
 
-export const update = async (id:number, payload: Partial<AttachmentInput>): Promise<AttachmentOutput> => {
-    const attachment = await Attachment.findByPk(id);
+        const compressedImagePath: string = `${file.path.split('.')[0]}.avif`;
+        await fs.writeFile(compressedImagePath, compressedImageBuffer);
+
+        const attachment: Attachment = await Attachment.create({
+            userId: userId,
+            name: `${file.originalname}`,
+            size: compressedImageBuffer.length,
+            path: compressedImagePath,
+            mimeType: 'image/avif',
+        });
+
+        await fs.unlink(file.path);
+
+        return attachment;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to create and compress attachment');
+    }
+};
+
+export const update = async (id: number, payload: Partial<AttachmentInput>): Promise<AttachmentOutput> => {
+    const attachment: Attachment | null = await Attachment.findByPk(id);
     if (!attachment) throw new Error('Attachment not found');
     return await attachment.update(payload);
 }
 
 export const getById = async (id: number): Promise<AttachmentOutput> => {
-    const attachment = await Attachment.findByPk(id);
+    const attachment: Attachment | null = await Attachment.findByPk(id);
     if (!attachment) throw new Error('Attachment not found');
     return attachment;
 }

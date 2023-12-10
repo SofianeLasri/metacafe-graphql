@@ -3,11 +3,13 @@ import RegisterForm from "~@/components/components/RegisterForm.vue";
 import LoginForm from "~@/components/components/LoginForm.vue";
 import {onMounted} from "vue";
 import router from "~@/router.ts";
+import profilePic from "~@/assets/images/square-logo-with-background.avif?url";
 
 const serverBaseUrl = import.meta.env.VITE_BACKEND_URL as string;
 const loginApiUrl = `${serverBaseUrl}/api/auth/login`;
 const registerApiUrl = `${serverBaseUrl}/api/auth/register`;
 const getUserInfosApiUrl = `${serverBaseUrl}/api/user/me`;
+const getAttachmentApiUrl = `${serverBaseUrl}/api/attachment/`;
 
 function handleLoginSubmit(e: SubmitEvent, loginEmailInput: HTMLInputElement, loginPasswordInput: HTMLInputElement, loginError: HTMLElement) {
   e.preventDefault();
@@ -85,6 +87,15 @@ function handlePostLogin() {
   }).then(async (response) => {
     if (response.status === 200) {
       const responseJson = await response.json();
+
+      localStorage.setItem("userId", responseJson.id);
+      localStorage.setItem("username", responseJson.username);
+      localStorage.setItem("email", responseJson.email);
+      localStorage.setItem("profilePictureUrl", profilePic);
+
+      if(responseJson.profilePicture !== null) {
+        localStorage.setItem("profilePictureUrl", getAttachmentApiUrl + responseJson.profilePicture);
+      }
 
       if(responseJson.hasSeenIntro) {
         window.location.href = router.resolve({name: "messages"}).href;

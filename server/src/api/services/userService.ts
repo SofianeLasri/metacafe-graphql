@@ -10,6 +10,10 @@ export const update = (id: number, payload: Partial<UserInput>): Promise<UserOut
     return userDal.update(id, payload);
 }
 
+export const updateProfilePicture = (id: number, profilePicture: Express.Multer.File): Promise<UserOutput> => {
+    return userDal.updateProfilePicture(id, profilePicture);
+}
+
 export const getById = (id: number): Promise<UserOutput> => {
     return userDal.getById(id)
 }

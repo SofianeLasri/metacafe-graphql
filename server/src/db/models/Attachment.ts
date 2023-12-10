@@ -9,6 +9,7 @@ interface AttachmentAttributes {
     id: number;
     userId: number;
     name: string;
+    size: number;
     path: string;
     mimeType: string;
     createdAt?: Date;
@@ -23,6 +24,7 @@ class Attachment extends Model<AttachmentAttributes, AttachmentInput> implements
     public id!: number;
     public userId!: number;
     public name!: string;
+    public size!: number;
     public path!: string;
     public mimeType!: string;
 
@@ -50,6 +52,10 @@ Attachment.init({
     },
     name: {
         type: DataTypes.STRING(128),
+        allowNull: false,
+    },
+    size: {
+        type: DataTypes.BIGINT.UNSIGNED,
         allowNull: false,
     },
     path: {
