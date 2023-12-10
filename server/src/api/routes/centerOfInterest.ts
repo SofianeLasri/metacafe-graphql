@@ -1,14 +1,22 @@
 import {Router} from "express";
 import * as centerOfInterestController from "../controllers/centerOfInterest";
 import {CenterOfInterest} from "../interfaces";
-import {isAuthenticated} from "../infrastructure/authentication";
+import {isAuthenticated, jsonParser} from "../infrastructure/authentication";
 
 const router: Router = Router();
 
-router.post('/matchByName', isAuthenticated, async (req, res) => {
-    const name: string = req.body.name;
-    const centerOfInterest: CenterOfInterest[] = await centerOfInterestController.matchByName(name);
-    res.json(centerOfInterest);
+router.post('/matchByName', isAuthenticated, jsonParser, async (req, res) => {
+    const name: string = req.body.search;
+    const centerOfInterests: CenterOfInterest[] = await centerOfInterestController.matchByName(name);
+
+    let ResponseCenterOfInterest: any = [];
+    for (const centerOfInterest of centerOfInterests) {
+        ResponseCenterOfInterest.push({
+            id: centerOfInterest.id,
+            name: centerOfInterest.name,
+        });
+    }
+    res.json(ResponseCenterOfInterest);
 });
 
 export default router;

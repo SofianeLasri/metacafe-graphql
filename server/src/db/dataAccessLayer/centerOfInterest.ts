@@ -6,7 +6,7 @@ export const matchByName = async (name: string): Promise<CenterOfInterestOutput[
     return CenterOfInterest.findAll({
         where: {
             name: {
-                [Op.like]: `%${name}%`,
+                [Op.like]: `${name}%`,
             },
         },
     });

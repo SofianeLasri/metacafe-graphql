@@ -15,6 +15,12 @@
         padding: 0;
         background-color: transparent;
 
+        svg {
+            width: .7rem;
+            height: .7rem;
+            fill: white;
+        }
+
         &:hover {
             cursor: pointer;
             background-color: color.adjust($white, $alpha: -0.5);

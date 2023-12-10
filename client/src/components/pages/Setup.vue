@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted} from "vue";
+import {App, createApp, onMounted} from "vue";
 import router from "~@/router.ts";
 import SearchZone from "~@/components/components/SearchZone.vue";
 import InteractiveBadge from "~@/components/components/InteractiveBadge.vue";
@@ -8,14 +8,18 @@ const serverBaseUrl: string = import.meta.env.VITE_BACKEND_URL as string;
 const updateProfileApiUrl: string = `${serverBaseUrl}/api/user/me`;
 const updateProfilePicApiUrl: string = `${updateProfileApiUrl}/updateProfilePic`;
 const getAttachmentApiUrl = `${serverBaseUrl}/api/attachment/`;
+const getCentersOfInterestApiUrl: string = `${serverBaseUrl}/api/centerOfInterest`;
+const matchCenterOfInterestApiUrl: string = `${getCentersOfInterestApiUrl}/matchByName`;
 
 let userProfilePictureUrl: string = localStorage.getItem("profilePictureUrl")!;
+let centersList: HTMLElement | null = null;
 
 onMounted(() => {
   const setProfilePicturePopup: HTMLElement = document.getElementById("setProfilePicturePopup")!;
   const profilePicture: HTMLElement = document.getElementById("profilePicture")!;
   const denyPpBtn: HTMLButtonElement = document.getElementById("denyPpBtn")! as HTMLButtonElement;
   const laterPpBtn: HTMLButtonElement = document.getElementById("laterPpBtn")! as HTMLButtonElement;
+  centersList = document.getElementById("centersList")!;
 
   profilePicture.addEventListener("click", () => {
     // Ouvrir la boîte de dialogue pour sélectionner une image
@@ -94,6 +98,17 @@ onMounted(() => {
     window.location.href = router.resolve({name: "messages"}).href;
   });
 });
+
+function addCenterOfInterest(centerOfInterestElem: HTMLElement) {
+  let tempDiv = document.createElement("div");
+  let badgeVueComponent: App<Element> = createApp({extends: InteractiveBadge}, {
+    text: centerOfInterestElem.dataset.text,
+    id: "centerOfInterest-" + centerOfInterestElem.dataset.value
+  });
+
+  badgeVueComponent.mount(tempDiv);
+  centersList!.appendChild(tempDiv.firstElementChild!);
+}
 </script>
 
 <template>
@@ -115,13 +130,12 @@ onMounted(() => {
     <div class="content">
       <h4>Qu'est-ce qui vous passionne ?</h4>
       <div class="mt-3">
-        <SearchZone placeholder="Rechercher un centre d'intérêt"/>
+        <SearchZone id="searchBar" :search-url="matchCenterOfInterestApiUrl"
+                    placeholder="Rechercher un centre d'intérêt" @resultClick="addCenterOfInterest" />
         <p class="text-muted small mt-1">Choisissez au moins 3 centres d'intérêt.</p>
       </div>
 
-      <div id="centersList d-flex flex-wrap">
-        <InteractiveBadge text="Jeux Vidéos"/>
-      </div>
+      <div id="centersList" class="d-flex flex-wrap gap-2"></div>
     </div>
   </div>
 </template>

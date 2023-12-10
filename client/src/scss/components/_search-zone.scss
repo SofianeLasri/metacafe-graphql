@@ -2,42 +2,75 @@
 @use "sass:color";
 
 .search-zone {
-  .search-bar {
-    display: flex;
-    color: $text-muted;
+    position: relative;
 
-    padding: map.get($spacers, 1);
-    border-radius: $border-radius;
-    border-bottom: $border-width solid $dark;
-    box-shadow: 0 0 2px 0 color.adjust($black, $alpha: -0.5);
+    .search-bar {
+        display: flex;
+        color: $text-muted;
 
-    &:focus-within {
-      border-bottom: map.get($border-widths, 3) solid $primary;
+        padding: map.get($spacers, 1);
+        border-radius: $border-radius;
+        border-bottom: $border-width solid $dark;
+        box-shadow: 0 0 2px 0 color.adjust($black, $alpha: -0.5);
+
+        &:focus-within {
+            border-bottom: map.get($border-widths, 3) solid $primary;
+        }
+
+        > * {
+            height: 1.5rem;
+        }
+
+        .icon-prepend {
+            aspect-ratio: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            svg {
+                width: .7rem;
+                height: .7rem;
+            }
+        }
+
+        input {
+            flex-grow: 1;
+            border: none;
+
+            &:focus {
+                outline: none;
+            }
+        }
     }
 
-    > * {
-      height: 1.5rem;
+    .results {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-height: 10rem;
+        background-color: $white;
+        margin-top: map.get($spacers, 1);
+        overflow-y: scroll;
+
+        padding: map.get($spacers, 1);
+        border-radius: $border-radius;
+        border-bottom: $border-width solid $dark;
+        box-shadow: 0 0 2px 0 color.adjust($black, $alpha: -0.5);
+
+        .simple-result {
+            display: flex;
+            align-items: center;
+            padding: map.get($spacers, 1);
+            border-radius: $border-radius;
+
+            &:hover {
+                background-color: $light;
+            }
+
+            .text {
+                margin-left: map.get($spacers, 1);
+            }
+        }
     }
-
-    .icon-prepend {
-      aspect-ratio: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      svg {
-        width: .7rem;
-        height: .7rem;
-      }
-    }
-
-    input {
-      flex-grow: 1;
-      border: none;
-
-      &:focus {
-        outline: none;
-      }
-    }
-  }
 }

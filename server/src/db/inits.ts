@@ -22,6 +22,19 @@ const dbInit = async () => {
     await MessageAttachment.sync({alter: isDev});
     await Friend.sync({alter: isDev});
     await CenterOfInterest.sync({alter: isDev});
+
+    const centerOfInterests = ["Sport", "Musique", "Jeux vidéo", "Cinéma", "Lecture", "Art", "Voyage", "Cuisine", "Animaux", "Technologie", "Science", "Histoire", "Nature", "Photographie", "Mode"];
+    for (const centerOfInterest of centerOfInterests) {
+        await CenterOfInterest.findOrCreate({
+            where: {
+                name: centerOfInterest,
+            },
+            defaults: {
+                name: centerOfInterest,
+            }
+        });
+    }
+
     await Story.sync({alter: isDev});
 }
 
