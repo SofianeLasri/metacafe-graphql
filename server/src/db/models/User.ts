@@ -1,4 +1,4 @@
-import {DataTypes, Model, Optional, HasManyGetAssociationsMixin} from "sequelize";
+import {DataTypes, Model, Optional, HasManyGetAssociationsMixin, BelongsToManyGetAssociationsMixin} from "sequelize";
 import sequelizeConnection from "../config";
 import bcrypt from 'bcrypt';
 import Friend from "./Friend";
@@ -16,6 +16,14 @@ interface UserAttributes {
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
+
+    getFriends?: HasManyGetAssociationsMixin<Friend>;
+    getStories?: HasManyGetAssociationsMixin<Story>;
+    getSentMessages?: HasManyGetAssociationsMixin<Message>;
+    getReceivedMessages?: HasManyGetAssociationsMixin<Message>;
+    getCenterOfInterests?: BelongsToManyGetAssociationsMixin<CenterOfInterest>;
+    addCenterOfInterest?: (centerOfInterest: CenterOfInterest) => Promise<void>;
+    removeCenterOfInterests?: (centerOfInterest: CenterOfInterest[]) => Promise<void>;
 }
 
 export interface UserInput extends Optional<UserAttributes, 'id'> {
@@ -41,11 +49,13 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
         return bcrypt.compareSync(password, this.password);
     }
 
-    public getFriends!: HasManyGetAssociationsMixin<Friend>;
-    public getStories!: HasManyGetAssociationsMixin<Story>;
-    public getSentMessages!: HasManyGetAssociationsMixin<Message>;
-    public getReceivedMessages!: HasManyGetAssociationsMixin<Message>;
-    public getCentersOfInterest!: HasManyGetAssociationsMixin<CenterOfInterest>;
+    declare getFriends: HasManyGetAssociationsMixin<Friend>;
+    declare getStories: HasManyGetAssociationsMixin<Story>;
+    declare getSentMessages: HasManyGetAssociationsMixin<Message>;
+    declare getReceivedMessages: HasManyGetAssociationsMixin<Message>;
+    declare getCenterOfInterests: BelongsToManyGetAssociationsMixin<CenterOfInterest>
+    declare addCenterOfInterest: (centerOfInterest: CenterOfInterest) => Promise<void>;
+    declare removeCenterOfInterests: (centerOfInterest: CenterOfInterest[]) => Promise<void>;
 }
 
 User.init({
@@ -62,10 +72,16 @@ User.init({
         type: DataTypes.STRING(128),
         allowNull: false,
         unique: true,
+        validate: {
+            isEmail: true,
+        }
     },
     password: {
         type: DataTypes.STRING(128),
         allowNull: false,
+        validate: {
+            notEmpty: true,
+        },
         set(value: string) {
             const hash = bcrypt.hashSync(value, 10);
             this.setDataValue('password', hash);

@@ -5,11 +5,16 @@ import {isAuthenticated, jsonParser} from "../infrastructure/authentication";
 
 const router: Router = Router();
 
+type centerOfInterest = {
+    id: number;
+    name: string;
+};
+
 router.post('/matchByName', isAuthenticated, jsonParser, async (req, res) => {
     const name: string = req.body.search;
     const centerOfInterests: CenterOfInterest[] = await centerOfInterestController.matchByName(name);
 
-    let ResponseCenterOfInterest: any = [];
+    let ResponseCenterOfInterest: centerOfInterest[] = [];
     for (const centerOfInterest of centerOfInterests) {
         ResponseCenterOfInterest.push({
             id: centerOfInterest.id,

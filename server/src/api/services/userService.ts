@@ -1,6 +1,7 @@
 import * as userDal from "../../db/dataAccessLayer/user";
 import {UserInput, UserOutput} from "../../db/models/User";
 import {GetAllUsersFilters} from "../../db/dataAccessLayer/types";
+import {CenterOfInterest} from "../interfaces";
 
 export const create = (payload: UserInput): Promise<UserOutput> => {
     return userDal.create(payload);
@@ -12,6 +13,18 @@ export const update = (id: number, payload: Partial<UserInput>): Promise<UserOut
 
 export const updateProfilePicture = (id: number, profilePicture: Express.Multer.File): Promise<UserOutput> => {
     return userDal.updateProfilePicture(id, profilePicture);
+}
+
+export const getCentersOfInterest = (id: number): Promise<CenterOfInterest[]> => {
+    return userDal.getCentersOfInterest(id);
+}
+
+export const addCenterOfInterest = (userId: number, centerOfInterestId: number): Promise<void> => {
+    return userDal.addCenterOfInterest(userId, centerOfInterestId);
+}
+
+export const setCenterOfInterests = (userId: number, centerOfInterestIds: number[]): Promise<void> => {
+    return userDal.setCenterOfInterests(userId, centerOfInterestIds);
 }
 
 export const getById = (id: number): Promise<UserOutput> => {

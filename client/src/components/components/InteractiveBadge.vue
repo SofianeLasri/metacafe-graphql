@@ -4,10 +4,18 @@ import {faXmark} from '@fortawesome/free-solid-svg-icons';
 
 library.add(faXmark);
 
-defineProps<{
-  id?: string;
+const props = defineProps<{
+  id: string;
   text: string;
 }>();
+
+const emit = defineEmits<{
+  (e: 'closeBtnClicked', id: string): void
+}>()
+
+const closeBtnClicked = (event: Event) => {
+  emit("closeBtnClicked", props.id);
+}
 </script>
 
 <template>
@@ -15,7 +23,7 @@ defineProps<{
     <div class="text">
       {{ text }}
     </div>
-    <button type="button" class="btn-close" aria-label="Close">
+    <button type="button" class="btn-close" aria-label="Close" @click="closeBtnClicked">
       <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512">
         <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
         <path

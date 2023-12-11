@@ -1,4 +1,4 @@
-import { DataTypes, Model, Optional, BelongsToManyGetAssociationsMixin } from "sequelize";
+import {DataTypes, Model, Optional, BelongsToManyGetAssociationsMixin} from "sequelize";
 import sequelizeConnection from "../config";
 import User from "./User";
 
@@ -9,10 +9,15 @@ interface CenterOfInterestAttributes {
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
+
+    getUsers?: BelongsToManyGetAssociationsMixin<User>;
 }
 
-export interface CenterOfInterestInput extends Optional<CenterOfInterestAttributes, 'id'> {}
-export interface CenterOfInterestOutput extends Required<CenterOfInterestAttributes> {}
+export interface CenterOfInterestInput extends Optional<CenterOfInterestAttributes, 'id'> {
+}
+
+export interface CenterOfInterestOutput extends Required<CenterOfInterestAttributes> {
+}
 
 class CenterOfInterest extends Model<CenterOfInterestAttributes, CenterOfInterestInput> implements CenterOfInterestAttributes {
     public id!: number;
@@ -22,7 +27,7 @@ class CenterOfInterest extends Model<CenterOfInterestAttributes, CenterOfInteres
     public readonly updatedAt!: Date;
     public readonly deletedAt!: Date;
 
-    public getUsers!: BelongsToManyGetAssociationsMixin<User>;
+    declare getUsers: BelongsToManyGetAssociationsMixin<User>;
 }
 
 CenterOfInterest.init({

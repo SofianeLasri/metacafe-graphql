@@ -1,5 +1,5 @@
 import {Op} from 'sequelize'
-import {User} from "../models";
+import {CenterOfInterest, User} from "../models";
 import {UserInput, UserOutput} from "../models/User";
 import {GetAllUsersFilters} from "./types";
 import * as AttachmentDAL from './attachment';
@@ -23,7 +23,32 @@ export const updateProfilePicture = async (userId: number, profilePicture: Expre
         console.error(error);
         throw new Error('Failed to update user profile picture');
     }
-};
+}
+
+export const getCentersOfInterest = async (id: number): Promise<CenterOfInterest[]> => {
+    const user: User | null = await User.findByPk(id);
+    if (!user) throw new Error('User not found');
+    return await user.getCenterOfInterests();
+}
+
+export const addCenterOfInterest = async (userId: number, centerOfInterestId: number): Promise<void> => {
+    const user: User | null = await User.findByPk(userId);
+    if (!user) throw new Error('User not found');
+    const centerOfInterest: CenterOfInterest | null = await CenterOfInterest.findByPk(centerOfInterestId);
+    if (!centerOfInterest) throw new Error('Center of interest not found');
+    await user.addCenterOfInterest(centerOfInterest);
+}
+
+export const setCenterOfInterests = async (userId: number, centerOfInterestIds: number[]): Promise<void> => {
+    const user: User | null = await User.findByPk(userId);
+    if (!user) throw new Error('User not found');
+
+    await user.removeCenterOfInterests(await user.getCenterOfInterests());
+
+    for (const centerOfInterestId of centerOfInterestIds) {
+        await addCenterOfInterest(userId, centerOfInterestId);
+    }
+}
 
 export const getById = async (id: number): Promise<UserOutput> => {
     const user: User | null = await User.findByPk(id);

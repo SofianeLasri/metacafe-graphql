@@ -2,12 +2,17 @@ import {Request, Response, Router} from 'express';
 import {Result, ValidationError, validationResult} from 'express-validator';
 import * as userController from "../controllers/user";
 import {CreateUserDTO, FilterUsersDTO, UpdateUserDTO} from "../dataTransferObjects/user.dto";
-import {User} from "../interfaces";
+import {CenterOfInterest, User} from "../interfaces";
 import {isAuthenticated, jsonParser} from "../infrastructure/authentication";
 import multer from "multer";
 
 const router: Router = Router();
 const upload: multer.Multer = multer({dest: 'uploads'})
+
+type centerOfInterest = {
+    id: number;
+    name: string;
+};
 
 router.get('/me', isAuthenticated, async (req: Request, res: Response) => {
     let user: User = req.user as User;
@@ -64,6 +69,43 @@ router.put('/me/updateProfilePic', isAuthenticated, upload.single('profilePictur
 function isImage(mimeType: string): boolean {
     return mimeType.startsWith('image/');
 }
+
+router.get('/me/centersOfInterest', isAuthenticated, async (req: Request, res: Response) => {
+    let user: User = req.user as User;
+    user = await userController.getById(user.id);
+
+    const centerOfInterests: CenterOfInterest[] = await userController.getCentersOfInterest(user.id);
+    const ResponseCenterOfInterest: centerOfInterest[] = [];
+    for (const centerOfInterest of centerOfInterests) {
+        ResponseCenterOfInterest.push({
+            id: centerOfInterest.id,
+            name: centerOfInterest.name,
+        });
+    }
+    res.json(ResponseCenterOfInterest);
+});
+
+router.put('/me/centersOfInterest', isAuthenticated, jsonParser, async (req: Request, res: Response) => {
+    let user: User = req.user as User;
+    user = await userController.getById(user.id);
+
+    const centersOfInterest: number[] = req.body.centersOfInterest;
+    for (const centerOfInterestId of centersOfInterest) {
+        await userController.addCenterOfInterest(user.id, centerOfInterestId);
+    }
+
+    return res.status(201).send();
+});
+
+router.post('/me/centersOfInterest', isAuthenticated, jsonParser, async (req: Request, res: Response) => {
+    let user: User = req.user as User;
+    user = await userController.getById(user.id);
+
+    const centersOfInterest: number[] = req.body.centersOfInterest;
+    await userController.setCenterOfInterests(user.id, centersOfInterest);
+
+    return res.status(201).send();
+});
 
 router.get('/:id', isAuthenticated, async (req: Request, res: Response) => {
     const id: number = Number(req.params.id);

@@ -3,7 +3,7 @@ import RegisterForm from "~@/components/components/RegisterForm.vue";
 import LoginForm from "~@/components/components/LoginForm.vue";
 import {onMounted} from "vue";
 import router from "~@/router.ts";
-import profilePic from "~@/assets/images/square-logo-with-background.avif?url";
+import defaultProfilePic from "~@/assets/images/square-logo-with-background.avif?url";
 
 const serverBaseUrl = import.meta.env.VITE_BACKEND_URL as string;
 const loginApiUrl = `${serverBaseUrl}/api/auth/login`;
@@ -91,7 +91,7 @@ function handlePostLogin() {
       localStorage.setItem("userId", responseJson.id);
       localStorage.setItem("username", responseJson.username);
       localStorage.setItem("email", responseJson.email);
-      localStorage.setItem("profilePictureUrl", profilePic);
+      localStorage.setItem("profilePictureUrl", defaultProfilePic);
 
       if(responseJson.profilePicture !== null) {
         localStorage.setItem("profilePictureUrl", getAttachmentApiUrl + responseJson.profilePicture);
