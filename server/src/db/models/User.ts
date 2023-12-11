@@ -6,6 +6,13 @@ import Story from "./Story";
 import Message from "./Message";
 import CenterOfInterest from "./CenterOfInterest";
 
+export type userPublicProfile = {
+    id: number;
+    name: string;
+    profilePicture?: number | null;
+    status: string;
+};
+
 interface UserAttributes {
     id: number;
     name: string;

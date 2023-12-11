@@ -4,14 +4,14 @@ const props = defineProps<{
   username: string;
   avatar: string;
   status: string;
-  actionText: string;
-  actionLink: string;
+  actionText?: string;
+  actionLink?: string;
 }>();
 
 </script>
 
 <template>
-  <div class="profile-card">
+  <div :id="`profile-card-${props.id}`" class="profile-card">
     <div class="profile-picture" :style="{'background-image': `url(${props.avatar})`}"></div>
     <div class="profile-meta">
       <div class="profile-name">

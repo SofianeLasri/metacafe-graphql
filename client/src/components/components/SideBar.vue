@@ -2,16 +2,27 @@
 import profilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import ProfileCard from "~@/components/components/ProfileCard.vue";
 import SearchZone from "~@/components/components/SearchZone.vue";
+import defaultProfilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import {onMounted, ref} from "vue";
 
+type userPublicProfile = {
+  id: number;
+  name: string;
+  profilePicture?: number | null;
+  status: string;
+};
+
 const props = defineProps<{
-  users: any[];
+  users: userPublicProfile[];
 }>();
 
 const sidebarRef = ref<HTMLElement | null>(null);
 
+const serverBaseUrl: string = import.meta.env.VITE_BACKEND_URL as string;
+const getAttachmentApiUrl = `${serverBaseUrl}/api/attachment/`;
 const userProfilePictureUrl: string = localStorage.getItem("profilePictureUrl")!;
 const userName: string = localStorage.getItem("username")!;
+const userId: number = parseInt(localStorage.getItem("userId")!);
 
 onMounted(() => {
   const sidebar: HTMLElement | null = document.getElementById("sidebar");
@@ -58,7 +69,7 @@ onMounted(() => {
       <div class="profile-card-header">
         <div class="background"></div>
         <ProfileCard
-            :id="1"
+            :id="userId"
             :username="userName"
             :avatar="userProfilePictureUrl"
             :action-text="`Voir le profil`"
@@ -66,15 +77,23 @@ onMounted(() => {
         />
       </div>
 
-      <SearchZone class="p-2" placeholder="Rechercher un utilisateur" />
+      <SearchZone class="p-2" placeholder="Rechercher un utilisateur"/>
     </div>
 
     <div class="user-list">
       <div class="list-item" v-for="user in users" :key="user.id">
         <ProfileCard
-            :id="`${user.id}`"
-            :username="`${user.username}`"
-            :avatar="`${user.avatar}`"
+            v-if="user.profilePicture !== null"
+            :id="user.id"
+            :username="`${user.name}`"
+            :avatar="`${getAttachmentApiUrl}${user.profilePicture}`"
+            :status="`${user.status}`"
+        />
+        <ProfileCard
+            v-else
+            :id="user.id"
+            :username="`${user.name}`"
+            :avatar="`${defaultProfilePic}`"
             :status="`${user.status}`"
         />
       </div>

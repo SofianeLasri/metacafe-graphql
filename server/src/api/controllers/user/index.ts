@@ -4,7 +4,7 @@ import {CreateUserDTO, FilterUsersDTO, UpdateUserDTO} from "../../dataTransferOb
 import * as mapper from './mapper';
 import * as centerOfInterestMapper from '../centerOfInterest/mapper';
 import {CenterOfInterest, User} from "../../interfaces";
-import {UserOutput} from "../../../db/models/User";
+import {UserOutput, userPublicProfile} from "../../../db/models/User";
 
 export const create = async (payload: CreateUserDTO): Promise<User> => {
     return mapper.toUser(await service.create(payload));
@@ -34,7 +34,15 @@ export const getFriends = async (req: Request, res: Response) => {
     try {
         const user: User = req.user as User; // Supposons que vous avez un objet User dans la requête après l'authentification
         const friends: UserOutput[] = await service.getFriends(user.id);
-        res.status(200).json(friends);
+        const friendsPublicProfiles: userPublicProfile[] = friends.map(friend => {
+            return {
+                id: friend.id,
+                name: friend.name,
+                profilePicture: friend.profilePicture,
+                status: "online", // TODO: Implémenter le statut
+            }
+        });
+        res.status(200).json(friendsPublicProfiles);
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');

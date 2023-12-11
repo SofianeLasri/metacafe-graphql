@@ -1,68 +1,54 @@
 <script setup lang="ts">
-import profilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import SideBar from "~@/components/components/SideBar.vue";
-import {onMounted} from "vue";
+import {onBeforeMount, onMounted, ref} from "vue";
 import Conversation from "~@/components/components/Conversation.vue";
 
-const fakeUsers: any[] = [
-  {
-    id: 1,
-    username: "SofianeLasri",
-    avatar: profilePic,
-    status: "En ligne",
-  },
-  {
-    id: 2,
-    username: "Jaqueline",
-    avatar: profilePic,
-    status: "En ligne",
-  },
-  {
-    id: 3,
-    username: "Jean",
-    avatar: profilePic,
-    status: "Absent",
-  },
-  {
-    id: 4,
-    username: "Pierre",
-    avatar: profilePic,
-    status: "En ligne",
-  },
-  {
-    id: 5,
-    username: "Paul",
-    avatar: profilePic,
-    status: "Asbent",
-  },
-  {
-    id: 6,
-    username: "Jacques",
-    avatar: profilePic,
-    status: "Asbent",
-  },
-  {
-    id: 7,
-    username: "Jeanne",
-    avatar: profilePic,
-    status: "En ligne",
-  },
-  {
-    id: 8,
-    username: "Marie",
-    avatar: profilePic,
-    status: "Asbent",
-  },
-];
+const serverBaseUrl: string = import.meta.env.VITE_BACKEND_URL as string;
+const updateProfileApiUrl: string = `${serverBaseUrl}/api/user/me`;
+const friendsApiUrl: string = `${updateProfileApiUrl}/friends`;
 
-onMounted (() => {
+type user = {
+  id: number;
+  name: string;
+  email: string;
+  hasSeenIntro: boolean;
+  profilePicture: number
+};
 
+const friends = ref<user[]>([]);
+const isLoading = ref(true);
+
+function getFriends() {
+  fetch(friendsApiUrl, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+  }).then(async (response) => {
+    isLoading.value = false; // Mettez à jour l'état de chargement lorsque la requête est terminée
+    if (response.status === 200) {
+      friends.value = await response.json();
+    } else {
+      const isResponseJson = response.headers.get("content-type")?.includes("application/json");
+      if (isResponseJson) {
+        const responseJson = await response.json();
+        console.error(responseJson.message);
+      } else {
+        console.error("Une erreur est survenue");
+      }
+    }
+  });
+}
+
+onMounted(() => {
+  getFriends();
 });
+
 </script>
 
 <template>
   <div class="messages-app">
-    <SideBar :users="fakeUsers"/>
+    <SideBar v-if="!isLoading" :users="friends"/>
     <Conversation/>
   </div>
 </template>
