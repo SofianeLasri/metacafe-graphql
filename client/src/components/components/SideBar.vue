@@ -10,6 +10,9 @@ const props = defineProps<{
 
 const sidebarRef = ref<HTMLElement | null>(null);
 
+const userProfilePictureUrl: string = localStorage.getItem("profilePictureUrl")!;
+const userName: string = localStorage.getItem("username")!;
+
 onMounted(() => {
   const sidebar: HTMLElement | null = document.getElementById("sidebar");
   sidebarRef.value = sidebar;
@@ -56,8 +59,8 @@ onMounted(() => {
         <div class="background"></div>
         <ProfileCard
             :id="1"
-            :username="`SofianeLasri`"
-            :avatar="profilePic"
+            :username="userName"
+            :avatar="userProfilePictureUrl"
             :action-text="`Voir le profil`"
             :action-link="`#`"
         />

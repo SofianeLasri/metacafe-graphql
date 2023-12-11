@@ -107,6 +107,19 @@ router.post('/me/centersOfInterest', isAuthenticated, jsonParser, async (req: Re
     return res.status(201).send();
 });
 
+router.get('/me/friends', isAuthenticated, userController.getFriends);
+
+router.put('/me/friends/add', isAuthenticated, userController.addFriend);
+
+router.put('/me/friends/remove', isAuthenticated, userController.removeFriend);
+
+router.put('/me/friends/block', isAuthenticated, userController.blockFriend);
+
+router.put('/me/friends/unblock', isAuthenticated, userController.unblockFriend);
+
+router.put('/me/friends/accept', isAuthenticated, userController.acceptFriendRequest);
+router.put('/me/friends/reject', isAuthenticated, userController.rejectFriendRequest);
+
 router.get('/:id', isAuthenticated, async (req: Request, res: Response) => {
     const id: number = Number(req.params.id);
     const result: User = await userController.getById(id);

@@ -7,6 +7,7 @@ interface FriendAttributes {
     id: number;
     userId: number;
     friendUserId: number;
+    relationType: string;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
@@ -19,6 +20,10 @@ class Friend extends Model<FriendAttributes, FriendInput> implements FriendAttri
     public id!: number;
     public userId!: number;
     public friendUserId!: number;
+    public relationType!: string;
+
+    public user!: User;
+    public stories!: Story[];
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -47,6 +52,11 @@ Friend.init({
             key: 'id',
         },
     },
+    relationType: {
+        type: DataTypes.ENUM('friend', 'pending', 'blocked'),
+        allowNull: false,
+        defaultValue: 'pending'
+    }
 }, {
     timestamps: true,
     tableName: 'friends',

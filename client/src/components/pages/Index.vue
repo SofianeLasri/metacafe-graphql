@@ -89,7 +89,7 @@ function handlePostLogin() {
       const responseJson = await response.json();
 
       localStorage.setItem("userId", responseJson.id);
-      localStorage.setItem("username", responseJson.username);
+      localStorage.setItem("username", responseJson.name);
       localStorage.setItem("email", responseJson.email);
       localStorage.setItem("profilePictureUrl", defaultProfilePic);
 
