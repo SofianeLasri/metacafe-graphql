@@ -4,17 +4,15 @@ import ProfileCard from "~@/components/components/ProfileCard.vue";
 import SearchZone from "~@/components/components/SearchZone.vue";
 import defaultProfilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import {onMounted, ref} from "vue";
-
-type userPublicProfile = {
-  id: number;
-  name: string;
-  profilePicture?: number | null;
-  status: string;
-};
+import {userPublicProfile} from "~@/types.ts";
 
 const props = defineProps<{
   users: userPublicProfile[];
 }>();
+
+const emit = defineEmits<{
+  (e: 'profileClicked', user: userPublicProfile): void
+}>()
 
 const sidebarRef = ref<HTMLElement | null>(null);
 
@@ -61,6 +59,10 @@ onMounted(() => {
     });
   }
 });
+
+function profileClicked(user: userPublicProfile) {
+  emit("profileClicked", user);
+}
 </script>
 
 <template>
@@ -74,27 +76,31 @@ onMounted(() => {
             :avatar="userProfilePictureUrl"
             :action-text="`Voir le profil`"
             :action-link="`#`"
-        />
+            status="En ligne"/>
       </div>
 
-      <SearchZone class="p-2" placeholder="Rechercher un utilisateur"/>
+      <SearchZone id="searchContact" class="p-2" placeholder="Rechercher un utilisateur" search-url="#"/>
     </div>
 
     <div class="user-list">
       <div class="list-item" v-for="user in users" :key="user.id">
         <ProfileCard
             v-if="user.profilePicture !== null"
+            element-id="friendProfile"
             :id="user.id"
             :username="`${user.name}`"
             :avatar="`${getAttachmentApiUrl}${user.profilePicture}`"
             :status="`${user.status}`"
+            @profileClicked="profileClicked"
         />
         <ProfileCard
             v-else
+            element-id="friendProfile"
             :id="user.id"
             :username="`${user.name}`"
             :avatar="`${defaultProfilePic}`"
             :status="`${user.status}`"
+            @profileClicked="profileClicked"
         />
       </div>
     </div>

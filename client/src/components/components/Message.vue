@@ -1,15 +1,9 @@
 <script setup lang="ts">
 import {computed} from "vue";
-
-type Attachment = {
-  id: number;
-  name: string;
-  url: string;
-}
-type Sender = "me" | "friend";
+import {Attachment, Sender} from "~@/types.ts";
 
 const props = defineProps<{
-  timestamp: bigint;
+  timestamp: number;
   text: string | null;
   attachments: Array<Attachment> | null;
   sender: Sender;

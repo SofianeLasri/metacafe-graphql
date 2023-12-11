@@ -39,7 +39,7 @@ export const getFriends = async (req: Request, res: Response) => {
                 id: friend.id,
                 name: friend.name,
                 profilePicture: friend.profilePicture,
-                status: "online", // TODO: Implémenter le statut
+                status: "En ligne", // TODO: Implémenter le statut
             }
         });
         res.status(200).json(friendsPublicProfiles);

@@ -7,19 +7,10 @@ import profilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import Message from "~@/components/components/Message.vue";
 import {onMounted} from "vue";
 import emojiByGroup from "unicode-emoji-json/data-by-group.json";
+import {userPublicProfile, emojiDataByGroup} from "~@/types.ts";
 
 library.add(faSmile, faImage, faMicrophone, faBars);
 
-type emojiDataByGroup = {
-  [key: string]: {
-    "emoji": string;
-    "skin_tone_support": boolean;
-    "name": string;
-    "slug": string;
-    "unicode_version": number;
-    "emoji_version": number;
-  }
-}
 
 const emojiDataByGroup: emojiDataByGroup = JSON.parse(JSON.stringify(emojiByGroup));
 
@@ -27,7 +18,7 @@ onMounted(() => {
   const openSidebarBtn: HTMLElement = document.getElementById("openSidebarBtn")!;
   const sidebar: HTMLElement = document.getElementById("sidebar")!;
   const emojiListContainer: HTMLElement = document.getElementById("emojiListContainer")!;
-  const messageInput: HTMLInputElement = document.getElementById("messageInput")!;
+  const messageInput: HTMLInputElement = document.getElementById("messageInput")! as HTMLInputElement;
   createEmojiGroupsDomElements(emojiDataByGroup, emojiListContainer, messageInput);
   const emojiPicker: HTMLElement = document.getElementById("emojiPicker")!;
   const pickEmojiBtn: HTMLElement = document.getElementById("pickEmojiBtn")!;
@@ -55,14 +46,15 @@ function createEmojiGroupsDomElements(emojiData: emojiDataByGroup, emojiListCont
 
     for (const emoji in emojiData[group]) {
       const emojiDomElement = document.createElement("div");
+      let emojiString: string = emojiData[group][emoji].emoji;
       emojiDomElement.classList.add("emoji");
       emojiDomElement.dataset.type = "emoji";
-      emojiDomElement.innerText = emojiData[group][emoji].emoji;
+      emojiDomElement.innerText =  emojiString;
 
       groupEmojisDomElement.appendChild(emojiDomElement);
 
       emojiDomElement.addEventListener("click", () => {
-        messageInput.value += emojiData[group][emoji].emoji;
+        messageInput.value += emojiString;
       });
     }
 
@@ -71,6 +63,14 @@ function createEmojiGroupsDomElements(emojiData: emojiDataByGroup, emojiListCont
     emojiListContainer.appendChild(groupDomElement);
   }
 }
+
+function loadConversation(user: userPublicProfile) {
+  console.log("loadConversation");
+}
+
+defineExpose({
+  loadConversation: loadConversation
+})
 </script>
 
 <template>
@@ -87,8 +87,8 @@ function createEmojiGroupsDomElements(emojiData: emojiDataByGroup, emojiListCont
       />
     </div>
     <div class="conversation-body">
-      <Message attachments="" sender="me" text="Lorem ipsum dolor sit amet" timestamp="1701510226"/>
-      <Message attachments="" sender="friend" text="Lorem ipsum dolor sit amet" timestamp="1701510247"/>
+      <Message :attachments="null" sender="me" text="Lorem ipsum dolor sit amet" :timestamp="1701510226"/>
+      <Message :attachments="null" sender="friend" text="Lorem ipsum dolor sit amet" :timestamp="1701510247"/>
     </div>
     <div class="conversation-footer">
       <div class="upper-popups">
