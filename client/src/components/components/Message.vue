@@ -26,7 +26,7 @@ const formattedTimestamp = computed(() => {
       </div>
     </div>
     <div class="text" v-if="props.text">
-      <p>Lorem ipsum dolor sit amet</p>
+      <p>{{ text }}</p>
     </div>
     <div class="attachments" v-if="props.attachments">
       <div class="attachment" v-for="attachment in props.attachments" :key="attachment.id">

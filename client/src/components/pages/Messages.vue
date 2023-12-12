@@ -162,14 +162,14 @@ function loadConversation(user: userPublicProfile) {
         </button>
         <ProfileCard
             :id="1"
-            :username="`Jaquelines`"
+            :username="`Métacafé`"
             :avatar="profilePic"
             :status="`En ligne`"
         />
       </div>
       <div class="conversation-body">
-        <Message :attachments="null" sender="me" text="Lorem ipsum dolor sit amet" :timestamp="1701510226"/>
-        <Message :attachments="null" sender="friend" text="Lorem ipsum dolor sit amet" :timestamp="1701510247"/>
+<!--        <Message :attachments="null" sender="me" text="Lorem ipsum dolor sit amet" :timestamp="1701510226"/>-->
+        <Message :attachments="null" sender="friend" text="Bienvenue sur Métacafé !" :timestamp="1702416035"/>
       </div>
       <div class="conversation-footer">
         <div class="upper-popups">
