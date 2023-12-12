@@ -155,6 +155,23 @@ export const getById = async (id: number): Promise<User> => {
     return mapper.toUser(await service.getById(id));
 }
 
+export const getPublicProfileById = async (req: Request, res: Response) => {
+    try {
+        const id: number = parseInt(req.params.id);
+        const user: UserOutput = await service.getById(id);
+        const userPublicProfile: userPublicProfile = {
+            id: user.id,
+            name: user.name,
+            profilePicture: user.profilePicture,
+            status: "En ligne", // TODO: Implémenter le statut
+        };
+        res.status(200).json(userPublicProfile);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
 export const getByEmail = async (email: string): Promise<User> => {
     return mapper.toUser(await service.getByEmail(email));
 }
