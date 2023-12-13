@@ -4,9 +4,13 @@ import {UserInput, UserOutput} from "../models/User";
 import {GetAllUsersFilters} from "./types";
 import * as AttachmentDAL from './attachment';
 import {AttachmentOutput} from "../models/Attachment";
+import {friendRelationType} from "../models/Friend";
 
 export const create = async (payload: UserInput): Promise<UserOutput> => {
-    return await User.create(payload);
+    let user: User = await User.create(payload);
+    // Ajout de l'utilisateur bot Métacafé dans la liste d'amis
+    addFriend(user.id, 1, 'friend');
+    return user;
 }
 
 export const update = async (id: number, payload: Partial<UserInput>): Promise<UserOutput> => {
@@ -55,8 +59,8 @@ export const getFriends = async (userId: number): Promise<UserOutput[]> => {
         const friends = await Friend.findAll({
             where: {
                 [Op.or]: [
-                    { userId: userId, relationType: 'friend' },
-                    { friendUserId: userId, relationType: 'friend' },
+                    {userId: userId, relationType: 'friend'},
+                    {friendUserId: userId, relationType: 'friend'},
                 ],
             },
             include: [
@@ -78,8 +82,8 @@ export const areFriends = async (userId: number, friendUserId: number): Promise<
         const areFriends = await Friend.findOne({
             where: {
                 [Op.or]: [
-                    { userId: userId, friendUserId: friendUserId, relationType: 'friend' },
-                    { userId: friendUserId, friendUserId: userId, relationType: 'friend' },
+                    {userId: userId, friendUserId: friendUserId, relationType: 'friend'},
+                    {userId: friendUserId, friendUserId: userId, relationType: 'friend'},
                 ],
             },
         });
@@ -90,20 +94,20 @@ export const areFriends = async (userId: number, friendUserId: number): Promise<
     }
 }
 
-export const addFriend = async (userId: number, friendUserId: number): Promise<void> => {
+export const addFriend = async (userId: number, friendUserId: number, relationType: friendRelationType = "pending"): Promise<void> => {
     try {
         // Créez une entrée dans la table Friend pour l'utilisateur courant
         await Friend.create({
             userId: userId,
             friendUserId: friendUserId,
-            relationType: 'pending',
+            relationType: relationType,
         });
 
         // Créez une entrée dans la table Friend pour l'utilisateur à ajouter
         await Friend.create({
             userId: friendUserId,
             friendUserId: userId,
-            relationType: 'pending',
+            relationType: relationType,
         });
     } catch (error) {
         console.error(error);
@@ -138,7 +142,7 @@ export const blockFriend = async (userId: number, friendUserId: number): Promise
     try {
         // Mettez à jour l'entrée dans la table Friend pour bloquer l'utilisateur
         await Friend.update(
-            { relationType: 'blocked' },
+            {relationType: 'blocked'},
             {
                 where: {
                     userId: userId,
@@ -164,7 +168,7 @@ export const unblockFriend = async (userId: number, friendUserId: number): Promi
     try {
         // Mettez à jour l'entrée dans la table Friend pour débloquer l'utilisateur
         await Friend.update(
-            { relationType: 'friend' },
+            {relationType: 'friend'},
             {
                 where: {
                     userId: userId,
@@ -195,7 +199,7 @@ export const acceptFriendRequest = async (userId: number, friendUserId: number):
     try {
         // Mettez à jour l'entrée dans la table Friend pour accepter la demande d'ami
         await Friend.update(
-            { relationType: 'friend' },
+            {relationType: 'friend'},
             {
                 where: {
                     userId: userId,

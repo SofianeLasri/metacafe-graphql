@@ -3,6 +3,8 @@ import sequelizeConnection from "../config";
 import User from "./User";
 import Story from "./Story";
 
+export type friendRelationType = "friend" | "pending" | "blocked";
+
 interface FriendAttributes {
     id: number;
     userId: number;
