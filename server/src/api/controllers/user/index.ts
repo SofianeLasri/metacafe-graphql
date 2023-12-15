@@ -5,6 +5,7 @@ import * as mapper from './mapper';
 import * as centerOfInterestMapper from '../centerOfInterest/mapper';
 import {CenterOfInterest, User} from "../../interfaces";
 import {UserOutput, userPublicProfile} from "../../../db/models/User";
+import {Activity} from "../../../db/models";
 
 export const create = async (payload: CreateUserDTO): Promise<User> => {
     return mapper.toUser(await service.create(payload));
@@ -166,6 +167,17 @@ export const getPublicProfileById = async (req: Request, res: Response) => {
             status: "En ligne", // TODO: Implémenter le statut
         };
         res.status(200).json(userPublicProfile);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+export const getActivities = async (req: Request, res: Response) => {
+    try {
+        const user: User = req.user as User;
+        const activities: Activity[] = await service.getActivities(user.id);
+        res.status(200).json(activities);
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');

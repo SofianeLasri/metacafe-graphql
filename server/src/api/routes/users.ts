@@ -121,6 +121,8 @@ router.put('/me/friends/unblock', isAuthenticated, userController.unblockFriend)
 router.put('/me/friends/accept', isAuthenticated, userController.acceptFriendRequest);
 router.put('/me/friends/reject', isAuthenticated, userController.rejectFriendRequest);
 
+router.get('/me/activity', isAuthenticated, userController.getActivities);
+
 router.get('/:id', isAuthenticated, userController.getPublicProfileById);
 router.get('/email/:email', isAuthenticated, async (req: Request, res: Response) => {
     const email: string = req.params.email;

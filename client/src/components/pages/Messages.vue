@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SideBar from "~@/components/components/SideBar.vue";
 import {onMounted, ref} from "vue";
-import {userPublicProfile, emojiDataByGroup} from "~@/types.ts";
+import {userPublicProfile, emojiDataByGroup, Activity} from "~@/types.ts";
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faSmile, faImage} from '@fortawesome/free-regular-svg-icons'
 import {faMicrophone, faBars} from "@fortawesome/free-solid-svg-icons";
@@ -16,9 +16,12 @@ const serverBaseUrl: string = import.meta.env.VITE_BACKEND_URL as string;
 const userApiUrl: string = `${serverBaseUrl}/api/user`;
 const updateProfileApiUrl: string = `${userApiUrl}/me`;
 const friendsApiUrl: string = `${updateProfileApiUrl}/friends`;
+const activitiesApiUrl: string = `${updateProfileApiUrl}/activity`;
 
+const allCachedUsers = ref<userPublicProfile[]>([]);
 const friends = ref<userPublicProfile[]>([]);
-const isLoading = ref(true);
+const activities = ref<Activity[]>([]);
+const isLoading = ref(0);
 
 const emojiDataByGroup: emojiDataByGroup = JSON.parse(JSON.stringify(emojiByGroup));
 
@@ -33,9 +36,15 @@ function getFriends() {
       "Authorization": `Bearer ${localStorage.getItem("token")}`
     },
   }).then(async (response) => {
-    isLoading.value = false; // Mettez à jour l'état de chargement lorsque la requête est terminée
     if (response.status === 200) {
       friends.value = await response.json();
+      isLoading.value++;
+
+      for (const friend of friends.value) {
+        if (!allCachedUsers.value.some((otherUser) => otherUser.id === friend.id)) {
+          allCachedUsers.value.push(friend);
+        }
+      }
     } else {
       const isResponseJson = response.headers.get("content-type")?.includes("application/json");
       if (isResponseJson) {
@@ -48,8 +57,76 @@ function getFriends() {
   });
 }
 
+function getActivities() {
+  fetch(activitiesApiUrl, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+  }).then(async (response) => {
+    if (response.status === 200) {
+      activities.value = await response.json();
+      isLoading.value++;
+
+      for (const activity of activities.value) {
+        if (!allCachedUsers.value.some((user) => user.id === activity.targetUserId)) {
+          let targetUser: userPublicProfile | null = await getUserPublicProfile(activity.targetUserId);
+          if (targetUser) {
+            allCachedUsers.value.push(targetUser);
+          }
+        }
+      }
+    } else {
+      const isResponseJson = response.headers.get("content-type")?.includes("application/json");
+      if (isResponseJson) {
+        const responseJson = await response.json();
+        console.error(responseJson.message);
+      } else {
+        console.error("Une erreur est survenue");
+      }
+    }
+  });
+}
+
+async function getUserPublicProfile(userId: number): Promise<userPublicProfile | null> {
+  let user: userPublicProfile | null = null;
+
+  let promise = fetch(userApiUrl + "/" + userId, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+  }).then(async (response) => {
+    if (response.status === 200) {
+      user = await response.json();
+    } else {
+      const isResponseJson = response.headers.get("content-type")?.includes("application/json");
+      if (isResponseJson) {
+        const responseJson = await response.json();
+        console.error(responseJson.message);
+      } else {
+        console.error("Une erreur est survenue");
+      }
+    }
+  });
+
+  await promise;
+  return user;
+}
+
+function getCachedUserPublicProfile(userId: number): userPublicProfile | null {
+  let user: userPublicProfile | null = null;
+
+  if (allCachedUsers.value.length > 0) {
+    user = allCachedUsers.value.find((otherUser) => otherUser.id === userId)!;
+  }
+
+  return user;
+}
+
 onMounted(() => {
   getFriends();
+  getActivities();
 
   conversation = document.getElementById("conversation")!;
   noConversation = document.getElementById("noConversation")!;
@@ -144,7 +221,7 @@ function createEmojiGroupsDomElements(emojiData: emojiDataByGroup, emojiListCont
 
 function loadConversation(user: userPublicProfile) {
   currentConversation = user;
-  if(conversation && noConversation) {
+  if (conversation && noConversation) {
     conversation.classList.remove("d-none");
     noConversation.classList.add("d-none");
   }
@@ -154,7 +231,7 @@ function loadConversation(user: userPublicProfile) {
 
 <template>
   <div class="messages-app">
-    <SideBar v-if="!isLoading" :users="friends" @profileClicked="loadConversation"/>
+    <SideBar v-if="isLoading == 2" :users="allCachedUsers" :activities="activities" @profileClicked="loadConversation"/>
     <div id="conversation" class="d-none">
       <div class="conversation-header">
         <button type="button" id="openSidebarBtn">
@@ -168,7 +245,7 @@ function loadConversation(user: userPublicProfile) {
         />
       </div>
       <div class="conversation-body">
-<!--        <Message :attachments="null" sender="me" text="Lorem ipsum dolor sit amet" :timestamp="1701510226"/>-->
+        <!--        <Message :attachments="null" sender="me" text="Lorem ipsum dolor sit amet" :timestamp="1701510226"/>-->
         <Message :attachments="null" sender="friend" text="Bienvenue sur Métacafé !" :timestamp="1702416035"/>
       </div>
       <div class="conversation-footer">

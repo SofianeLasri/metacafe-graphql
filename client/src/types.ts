@@ -22,4 +22,14 @@ export type Attachment = {
     url: string;
 }
 
+export type activityType = "friendRequest" | "sendMessage";
+
+export type Activity = {
+    id: number;
+    userId: number;
+    targetUserId: number;
+    type: activityType;
+    isNew: boolean;
+}
+
 export type Sender = "me" | "friend";

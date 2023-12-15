@@ -1,10 +1,11 @@
 import {Op} from 'sequelize'
-import {CenterOfInterest, Friend, User} from "../models";
+import {Activity, CenterOfInterest, Friend, User} from "../models";
 import {UserInput, UserOutput} from "../models/User";
 import {GetAllUsersFilters} from "./types";
 import * as AttachmentDAL from './attachment';
 import {AttachmentOutput} from "../models/Attachment";
 import {friendRelationType} from "../models/Friend";
+import {activityType} from "../models/Activity";
 
 export const create = async (payload: UserInput): Promise<UserOutput> => {
     let user: User = await User.create(payload);
@@ -238,6 +239,33 @@ export const rejectFriendRequest = async (userId: number, friendUserId: number):
     } catch (error) {
         console.error(error);
         throw new Error('Failed to reject friend request');
+    }
+};
+
+export const getActivities = async (userId: number): Promise<Activity[]> => {
+    try {
+        return await Activity.findAll({
+            where: {
+                userId: userId,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to get user activity');
+    }
+};
+
+export const addActivity = async (userId: number, targetUserId: number, type: activityType): Promise<void> => {
+    try {
+        await Activity.create({
+            userId: userId,
+            targetUserId: targetUserId,
+            type: type,
+            isNew: true,
+        });
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to add user activity');
     }
 };
 

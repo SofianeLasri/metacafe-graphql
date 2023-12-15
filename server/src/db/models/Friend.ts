@@ -9,7 +9,7 @@ interface FriendAttributes {
     id: number;
     userId: number;
     friendUserId: number;
-    relationType: string;
+    relationType: friendRelationType;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
@@ -22,7 +22,7 @@ class Friend extends Model<FriendAttributes, FriendInput> implements FriendAttri
     public id!: number;
     public userId!: number;
     public friendUserId!: number;
-    public relationType!: string;
+    public relationType!: friendRelationType;
 
     public user!: User;
     public stories!: Story[];

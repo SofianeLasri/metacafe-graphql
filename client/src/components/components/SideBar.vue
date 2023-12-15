@@ -4,11 +4,14 @@ import ProfileCard from "~@/components/components/ProfileCard.vue";
 import SearchZone from "~@/components/components/SearchZone.vue";
 import defaultProfilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import {onMounted, ref} from "vue";
-import {userPublicProfile} from "~@/types.ts";
+import {Activity, userPublicProfile} from "~@/types.ts";
 
 const props = defineProps<{
   users: userPublicProfile[];
+  activities: Activity[];
 }>();
+
+console.log(props.activities);
 
 const emit = defineEmits<{
   (e: 'profileClicked', user: userPublicProfile): void
@@ -21,6 +24,13 @@ const getAttachmentApiUrl = `${serverBaseUrl}/api/attachment/`;
 const userProfilePictureUrl: string = localStorage.getItem("profilePictureUrl")!;
 const userName: string = localStorage.getItem("username")!;
 const userId: number = parseInt(localStorage.getItem("userId")!);
+
+const acitivitiesSortedUsersList: userPublicProfile[] = [];
+
+props.activities.forEach((activity: Activity) => {
+  let user: userPublicProfile = props.users.find((user: userPublicProfile) => user.id === activity.targetUserId)!;
+  acitivitiesSortedUsersList.push(user);
+});
 
 onMounted(() => {
   const sidebar: HTMLElement | null = document.getElementById("sidebar");
@@ -83,7 +93,7 @@ function profileClicked(user: userPublicProfile) {
     </div>
 
     <div class="user-list">
-      <div class="list-item" v-for="user in users" :key="user.id">
+      <div class="list-item" v-for="user in acitivitiesSortedUsersList" :key="user.id">
         <ProfileCard
             v-if="user.profilePicture !== null"
             element-id="friendProfile"
