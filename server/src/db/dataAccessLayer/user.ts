@@ -1,11 +1,12 @@
 import {Op} from 'sequelize'
-import {Activity, CenterOfInterest, Friend, User} from "../models";
+import {Activity, CenterOfInterest, Friend, Message, User} from "../models";
 import {UserInput, UserOutput} from "../models/User";
 import {GetAllUsersFilters} from "./types";
 import * as AttachmentDAL from './attachment';
 import {AttachmentOutput} from "../models/Attachment";
 import {friendRelationType} from "../models/Friend";
 import {activityType} from "../models/Activity";
+import {Sequelize} from "sequelize-typescript";
 
 export const create = async (payload: UserInput): Promise<UserOutput> => {
     let user: User = await User.create(payload);
@@ -248,6 +249,13 @@ export const getActivities = async (userId: number): Promise<Activity[]> => {
             where: {
                 userId: userId,
             },
+            attributes: [
+                'targetUserId',
+                [Sequelize.fn('max', Sequelize.col('createdAt')), 'latestCreatedAt'],
+                // Autres attributs que vous voulez récupérer
+            ],
+            group: ['targetUserId'],
+            order: [['latestCreatedAt', 'DESC']],
         });
     } catch (error) {
         console.error(error);
@@ -268,6 +276,21 @@ export const addActivity = async (userId: number, targetUserId: number, type: ac
         throw new Error('Failed to add user activity');
     }
 };
+
+export const sendMessage = async (userId: number, targetUserId: number, text: string): Promise<void> => {
+    try {
+        await addActivity(userId, targetUserId, 'sendMessage');
+        await Message.create({
+            senderUserId: userId,
+            receiverUserId: targetUserId,
+            text: text,
+        });
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to send message');
+    }
+
+}
 
 export const getById = async (id: number): Promise<UserOutput> => {
     const user: User | null = await User.findByPk(id);

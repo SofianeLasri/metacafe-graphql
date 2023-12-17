@@ -8,6 +8,7 @@ import {friendRelationType} from "../../db/models/Friend";
 export const create = async (payload: UserInput): Promise<UserOutput> => {
     let user: UserOutput = await userDal.create(payload);
     await userDal.addActivity(user.id, 1, 'friendRequest');
+    await userDal.sendMessage(user.id, 1, 'Bienvenue sur Métacafé ! Ici tu peux rencontrer des gens qui partagent les mêmes centres d\'intérêt que toi. Utilise la fonction de recherche pour trouver des personnes qui partagent tes passions et envoie-leur un message pour faire connaissance !');
     return user;
 }
 
