@@ -4,12 +4,47 @@ import LoginForm from "~@/components/components/LoginForm.vue";
 import {onMounted} from "vue";
 import router from "~@/router.ts";
 import defaultProfilePic from "~@/assets/images/square-logo-with-background.avif?url";
+import {gql} from "@apollo/client/core";
+import client from './../../apolloClient';
 
 const serverBaseUrl = import.meta.env.VITE_BACKEND_URL as string;
 const loginApiUrl = `${serverBaseUrl}/api/auth/login`;
 const registerApiUrl = `${serverBaseUrl}/api/auth/register`;
 const getUserInfosApiUrl = `${serverBaseUrl}/api/user/me`;
 const getAttachmentApiUrl = `${serverBaseUrl}/api/attachment/`;
+
+const LOGIN_MUTATION = gql`
+  mutation Login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+      user {
+        id
+        email
+      }
+    }
+  }
+`;
+
+export const REGISTER_MUTATION = gql`
+  mutation Register($email: String!, $name: String!, $password: String!, $confirmPassword: String!) {
+    register(email: $email, name: $name, password: $password, confirmPassword: $confirmPassword) {
+      success
+      message
+    }
+  }
+`;
+
+export const GET_USER_INFOS_QUERY = gql`
+  query GetUserInfos {
+    me {
+      id
+      name
+      email
+      profilePicture
+      hasSeenIntro
+    }
+  }
+`;
 
 function handleLoginSubmit(e: SubmitEvent, loginEmailInput: HTMLInputElement, loginPasswordInput: HTMLInputElement, loginError: HTMLElement) {
   e.preventDefault();
@@ -19,27 +54,21 @@ function handleLoginSubmit(e: SubmitEvent, loginEmailInput: HTMLInputElement, lo
     password: loginPasswordInput.value
   };
 
-  fetch(loginApiUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data),
-  }).then(async (response) => {
-    if (response.status === 200) {
-      const responseJson = await response.json();
-      localStorage.setItem("token", responseJson.token);
+  client.mutate({
+    mutation: LOGIN_MUTATION,
+    variables: data
+  }).then(response => {
+    const {data} = response;
+    if (data && data.login) {
+      localStorage.setItem("token", data.login.token);
       handlePostLogin();
     } else {
-      const isResponseJson = response.headers.get("content-type")?.includes("application/json");
-      if (isResponseJson) {
-        const responseJson = await response.json();
-        loginError.textContent = responseJson.message;
-      } else {
-        loginError.textContent = "Une erreur est survenue";
-      }
+      loginError.textContent = "Une erreur est survenue";
       loginError.classList.remove("d-none");
     }
+  }).catch(error => {
+    loginError.textContent = error.message;
+    loginError.classList.remove("d-none");
   });
 }
 
@@ -54,63 +83,58 @@ function handleRegistrationSubmit(e: SubmitEvent, registerEmailInput: HTMLInputE
   };
 
   if (registerPasswordInput.value !== registerPasswordConfirmInput.value) {
+    registerError.textContent = "Les mots de passe ne correspondent pas";
     registerError.classList.remove("d-none");
     return;
   }
 
-  fetch(registerApiUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data),
-  }).then((response) => {
-    if (response.status === 200) {
+  client.mutate({
+    mutation: REGISTER_MUTATION,
+    variables: data
+  }).then(response => {
+    const { data } = response;
+    if (data && data.register && data.register.success) {
       registerSuccess.classList.remove("d-none");
       registerError.classList.add("d-none");
       registerForm.classList.add("d-none");
       loginForm.classList.remove("d-none");
     } else {
+      registerError.textContent = data.register.message || "Une erreur est survenue";
       registerError.classList.remove("d-none");
-      console.log(response.body);
     }
+  }).catch(error => {
+    registerError.textContent = error.message;
+    registerError.classList.remove("d-none");
   });
 }
 
 function handlePostLogin() {
-  fetch(getUserInfosApiUrl, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
-    }
-  }).then(async (response) => {
-    if (response.status === 200) {
-      const responseJson = await response.json();
-
-      localStorage.setItem("userId", responseJson.id);
-      localStorage.setItem("username", responseJson.name);
-      localStorage.setItem("email", responseJson.email);
+  client.query({
+    query: GET_USER_INFOS_QUERY,
+    fetchPolicy: 'network-only', // Pour s'assurer d'obtenir les données les plus récentes
+  }).then(response => {
+    const { data } = response;
+    if (data && data.me) {
+      const user = data.me;
+      localStorage.setItem("userId", user.id);
+      localStorage.setItem("username", user.name);
+      localStorage.setItem("email", user.email);
       localStorage.setItem("profilePictureUrl", defaultProfilePic);
 
-      if(responseJson.profilePicture !== null) {
-        localStorage.setItem("profilePictureUrl", getAttachmentApiUrl + responseJson.profilePicture);
+      if (user.profilePicture !== null) {
+        localStorage.setItem("profilePictureUrl", getAttachmentApiUrl + user.profilePicture);
       }
 
-      if(responseJson.hasSeenIntro) {
-        window.location.href = router.resolve({name: "messages"}).href;
+      if (user.hasSeenIntro) {
+        window.location.href = router.resolve({ name: "messages" }).href;
       } else {
-        window.location.href = router.resolve({name: "setup"}).href;
+        window.location.href = router.resolve({ name: "setup" }).href;
       }
     } else {
-      const isResponseJson = response.headers.get("content-type")?.includes("application/json");
-      if (isResponseJson) {
-        const responseJson = await response.json();
-        console.log(responseJson);
-      } else {
-        console.log("Une erreur est survenue");
-      }
+      console.log("Une erreur est survenue");
     }
+  }).catch(error => {
+    console.log(error.message);
   });
 }
 
