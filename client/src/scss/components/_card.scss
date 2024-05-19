@@ -1,0 +1,7 @@
+@use "sass:map";
+
+.card {
+    padding: 1rem;
+    background-color: $white;
+    border-radius: $border-radius;
+}

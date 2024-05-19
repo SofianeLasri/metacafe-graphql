@@ -1,0 +1,144 @@
+@use "sass:map";
+@use "sass:color";
+
+.dashboard-app {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+
+    background-image: url("~@/assets/images/pattern.avif");
+    background-size: 210px;
+    background-position: center;
+    background-repeat: repeat;
+
+    .header {
+        height: 3rem;
+        background-color: $dark;
+        border-bottom: .125rem solid $primary;
+        flex-shrink: 0;
+
+        .logo {
+            height: 2rem;
+
+            img {
+                height: 100%;
+            }
+        }
+    }
+
+    .page-content {
+        @extend .container;
+        flex-grow: 1;
+        overflow: auto;
+
+        .cards-wrapper {
+            display: flex;
+            gap: 4rem;
+            margin-top: 6rem;
+
+            .sidebar {
+                flex-shrink: 0;
+                width: 21rem;
+                display: flex;
+                flex-direction: column;
+                gap: 2.5rem;
+
+                .user-profile {
+                    .profile-picture {
+                        width: 6rem;
+                    }
+
+                    .profile-name {
+                        font-size: $h4-font-size;
+                    }
+
+                    .profile-action {
+                        color: $primary;
+                    }
+                }
+
+                .friend-list {
+                    .profile-card {
+                        padding: map.get($spacers, 2) map.get($spacers, 3);
+                        border-radius: $border-radius;
+
+                        &:hover {
+                            background-color: $gray-400;
+                        }
+                    }
+                }
+            }
+
+            .feed-wrapper {
+                display: flex;
+                gap: 2.5rem;
+
+                .feed-col{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.5rem;
+
+                    .col-header {
+                        display: flex;
+                        flex-direction: column;
+
+                        h3 {
+                            margin: 0;
+                        }
+                    }
+
+                    .feed-cards {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 1rem;
+
+                        .post-card {
+                            @extend .card;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 1.5rem;
+
+                            .upper-part {
+                                .author {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: .5rem;
+
+                                    .profile-picture {
+                                        width: 2rem;
+                                        aspect-ratio: 1;
+                                        border: .125rem solid $primary;
+                                        border-radius: 50%;
+                                        background-size: cover;
+                                    }
+
+                                    .user-name {
+                                        font-weight: $font-weight-bold;
+                                    }
+                                }
+                            }
+
+                            .lower-part {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+
+                                .btn {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: .25rem;
+
+                                    .action-icon {
+                                        height: 1.25rem;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
