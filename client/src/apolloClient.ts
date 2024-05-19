@@ -1,7 +1,8 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
+import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
     uri: import.meta.env.VITE_GRAPHQL_URL, // Remplace par l'URL de ton serveur GraphQL
 });
 

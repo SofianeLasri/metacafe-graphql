@@ -25,7 +25,7 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-export const REGISTER_MUTATION = gql`
+const REGISTER_MUTATION = gql`
   mutation Register($email: String!, $name: String!, $password: String!, $confirmPassword: String!) {
     register(email: $email, name: $name, password: $password, confirmPassword: $confirmPassword) {
       success
@@ -34,7 +34,7 @@ export const REGISTER_MUTATION = gql`
   }
 `;
 
-export const GET_USER_INFOS_QUERY = gql`
+const GET_USER_INFOS_QUERY = gql`
   query GetUserInfos {
     me {
       id
@@ -198,7 +198,13 @@ onMounted(() => {
       <a href="#" class="small text-light">Mentions légales</a>
       <a href="#" class="small text-light">Politique de confidentialité</a>
       <a href="#" class="small text-light">Conditions générales d'utilisation</a>
-      <a href="https://sofianelasri.fr/" target="_blank" class="small text-light">2023 - Sofiane Lasri</a>
+      <span class="small text-light">
+        2024 -
+        <a href="https://github.com/FlorianB30" target="_blank" class="text-light">Floriant Biendiné</a>,
+        <a href="https://sofianelasri.fr/" target="_blank" class="text-light">Sofiane Lasri</a>,
+        <a href="https://github.com/Dorianmav" target="_blank" class="text-light">Dorian Mavoungoud</a> &
+        <a href="https://github.com/Paul-HenryN" target="_blank" class="text-light">Paul-Henry Ngounou</a>
+      </span>
     </div>
   </div>
 </template>

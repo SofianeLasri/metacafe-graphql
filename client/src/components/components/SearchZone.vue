@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import {library} from '@fortawesome/fontawesome-svg-core';
-import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
-import {App, createApp, createVNode, getCurrentInstance, onMounted, VueElement} from "vue";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { App, createApp, onMounted } from "vue";
 import SimpleResult from "~@/components/components/SearchZoneResults/SimpleResult.vue";
+import { gql } from "@apollo/client/core";
+import client from './../../apolloClient';
 
 const props = defineProps<{
   id: string;
   placeholder: string;
-  searchUrl: string;
+  searchQuery: string;
+  responseField: string;
 }>();
 
 const emit = defineEmits<{
   (e: 'resultClick', element: HTMLElement): void
-}>()
+}>();
 
 library.add(faMagnifyingGlass);
 
@@ -34,29 +37,23 @@ onMounted(() => {
   document.addEventListener("touchstart", handleClickOutside);
 
   searchInput.addEventListener("keyup", (event) => {
-    fetch(props.searchUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
-      },
-      body: JSON.stringify({
+    const SEARCH_QUERY = gql`${props.searchQuery}`;
+
+    client.query({
+      query: SEARCH_QUERY,
+      variables: {
         search: searchInput.value
-      })
-    }).then(async (response) => {
-      if (response.ok) {
-        const responseJson = await response.json();
-        console.log(responseJson);
-        showResults(responseJson);
-      } else {
-        const isResponseJson = response.headers.get("content-type")?.includes("application/json");
-        if (isResponseJson) {
-          const responseJson = await response.json();
-          console.log(responseJson);
-        } else {
-          console.log("Une erreur est survenue");
-        }
       }
+    }).then(response => {
+      const data = response.data[props.responseField];
+      if (data) {
+        console.log(data);
+        showResults(data);
+      } else {
+        console.log("Une erreur est survenue");
+      }
+    }).catch(error => {
+      console.log(error.message);
     });
   });
 
@@ -73,17 +70,10 @@ onMounted(() => {
       let resultVueComponent: App<Element>;
       let tempDiv = document.createElement("div");
 
-      if (result.picture) {
-        resultVueComponent = createApp({extends: SimpleResult}, {
-          text: result.name,
-          value: result.id
-        });
-      } else {
-        resultVueComponent = createApp({extends: SimpleResult}, {
-          text: result.name,
-          value: result.id
-        });
-      }
+      resultVueComponent = createApp({extends: SimpleResult}, {
+        text: result.name,
+        value: result.id
+      });
 
       resultVueComponent.mount(tempDiv);
       tempDiv.firstElementChild!.addEventListener("click", (event) => {

@@ -4,14 +4,56 @@ import router from "~@/router.ts";
 import SearchZone from "~@/components/components/SearchZone.vue";
 import InteractiveBadge from "~@/components/components/InteractiveBadge.vue";
 import defaultProfilePic from "~@/assets/images/square-logo-with-background.avif?url";
+import { gql } from "@apollo/client/core";
+import client from './../../apolloClient';
 
 const serverBaseUrl: string = import.meta.env.VITE_BACKEND_URL as string;
 const updateProfileApiUrl: string = `${serverBaseUrl}/api/user/me`;
-const updateProfilePicApiUrl: string = `${updateProfileApiUrl}/updateProfilePic`;
-const userCentersOfInterestApiUrl: string = `${updateProfileApiUrl}/centersOfInterest`;
 const getAttachmentApiUrl = `${serverBaseUrl}/api/attachment/`;
-const getCentersOfInterestApiUrl: string = `${serverBaseUrl}/api/centerOfInterest`;
-const matchCenterOfInterestApiUrl: string = `${getCentersOfInterestApiUrl}/matchByName`;
+
+const GET_CENTER_OF_INTEREST_QUERY: string = `
+  query GetCenterOfInterest($search: String!) {
+    centerOfInterest(search: $search) {
+      id
+      name
+    }
+  }
+`;
+
+const GET_CENTERS_OF_INTEREST_QUERY = gql`
+  query GetCentersOfInterest {
+    centersOfInterest {
+      id
+      name
+    }
+  }
+`;
+
+const UPDATE_CENTERS_OF_INTEREST_MUTATION = gql`
+  mutation UpdateCentersOfInterest($centersOfInterest: [ID!]!) {
+    updateCentersOfInterest(centersOfInterest: $centersOfInterest) {
+      success
+      message
+    }
+  }
+`;
+
+const UPDATE_PROFILE_PIC_MUTATION = gql`
+  mutation UpdateProfilePic($file: Upload!) {
+    updateProfilePic(file: $file) {
+      profilePicture
+    }
+  }
+`;
+
+const UPDATE_PROFILE_MUTATION = gql`
+  mutation UpdateProfile($hasSeenIntro: Boolean!) {
+    updateProfile(hasSeenIntro: $hasSeenIntro) {
+      success
+      message
+    }
+  }
+`;
 
 type centerOfInterest = {
   id: number;
@@ -48,36 +90,25 @@ onMounted(() => {
     const file = input.files?.[0];
 
     if (file) {
-      // Créer un objet FormData pour envoyer le fichier
-      const formData = new FormData();
-      formData.append("profilePicture", file);
-
-      // Envoyer la requête au serveur
-      fetch(updateProfilePicApiUrl, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        },
-        body: formData
-      }).then(async (response) => {
-        if (response.ok) {
-          const responseJson = await response.json();
-          const newProfilePictureUrl = getAttachmentApiUrl + responseJson.profilePicture;
+      client.mutate({
+        mutation: UPDATE_PROFILE_PIC_MUTATION,
+        variables: {
+          file
+        }
+      }).then(response => {
+        const { data } = response;
+        if (data && data.updateProfilePic) {
+          const newProfilePictureUrl = getAttachmentApiUrl + data.updateProfilePic.profilePicture;
           localStorage.setItem("profilePictureUrl", newProfilePictureUrl);
           userProfilePictureUrl = newProfilePictureUrl;
           profilePicture.style.backgroundImage = `url(${userProfilePictureUrl})`;
 
           showFinishButton(true);
         } else {
-          // Gérer les erreurs
-          const isResponseJson = response.headers.get("content-type")?.includes("application/json");
-          if (isResponseJson) {
-            const responseJson = await response.json();
-            console.log(responseJson);
-          } else {
-            console.log("Une erreur est survenue");
-          }
+          console.log("Une erreur est survenue");
         }
+      }).catch(error => {
+        console.log(error.message);
       });
     }
   };
@@ -92,28 +123,25 @@ onMounted(() => {
   }
 
   function finishSetup() {
-    fetch(updateProfileApiUrl, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
-      },
-      body: JSON.stringify({
+    client.mutate({
+      mutation: UPDATE_PROFILE_MUTATION,
+      variables: {
         hasSeenIntro: true
-      })
-    }).then(async (response) => {
-      if (response.status === 201) {
-        window.location.href = router.resolve({name: "messages"}).href;
-      } else {
-        const isResponseJson = response.headers.get("content-type")?.includes("application/json");
-        if (isResponseJson) {
-          const responseJson = await response.json();
-          console.log(responseJson);
-        } else {
-          console.log("Une erreur est survenue");
+      },
+      context: {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
         }
       }
-
+    }).then(response => {
+      const { data } = response;
+      if (data && data.updateProfile && data.updateProfile.success) {
+        window.location.href = router.resolve({ name: "messages" }).href;
+      } else {
+        console.log(data.updateProfile.message || "Une erreur est survenue");
+      }
+    }).catch(error => {
+      console.log(error.message);
     });
   }
 
@@ -130,30 +158,26 @@ onMounted(() => {
   });
 
   nextBtn.addEventListener("click", () => {
-    fetch(userCentersOfInterestApiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+    client.mutate({
+      mutation: UPDATE_CENTERS_OF_INTEREST_MUTATION,
+      variables: {
+        centersOfInterest: centersOfInterest.map((centerOfInterest) => centerOfInterest.id)
       },
-      body: JSON.stringify({
-        centersOfInterest: centersOfInterest.map((centerOfInterest) => {
-          return centerOfInterest.id;
-        })
-      })
-    }).then(async (response) => {
-      if (response.status === 201) {
-        showProfilePicturePopup();
-      } else {
-        const isResponseJson = response.headers.get("content-type")?.includes("application/json");
-        if (isResponseJson) {
-          const responseJson = await response.json();
-          console.log(responseJson);
-        } else {
-          console.log("Une erreur est survenue");
+      context: {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
         }
       }
-    })
+    }).then(response => {
+      const { data } = response;
+      if (data && data.updateCentersOfInterest && data.updateCentersOfInterest.success) {
+        showProfilePicturePopup();
+      } else {
+        console.log(data.updateCentersOfInterest.message || "Une erreur est survenue");
+      }
+    }).catch(error => {
+      console.log(error.message);
+    });
   });
 
   function showProfilePicturePopup() {
@@ -164,28 +188,25 @@ onMounted(() => {
 });
 
 function getCentersOfInterest() {
-  fetch(userCentersOfInterestApiUrl, {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
+  client.query({
+    query: GET_CENTERS_OF_INTEREST_QUERY,
+    context: {
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
     }
-  }).then(async (response) => {
-    if (response.ok) {
-      const responseJson = await response.json();
-      centersOfInterest = responseJson;
+  }).then(response => {
+    const { data } = response;
+    if (data && data.centersOfInterest) {
+      centersOfInterest = data.centersOfInterest;
       centersOfInterest.forEach((centerOfInterest) => {
         addCenterOfInterest(centerOfInterest);
       });
     } else {
-      // Gérer les erreurs
-      const isResponseJson = response.headers.get("content-type")?.includes("application/json");
-      if (isResponseJson) {
-        const responseJson = await response.json();
-        console.log(responseJson);
-      } else {
-        console.log("Une erreur est survenue");
-      }
+      console.log("Une erreur est survenue");
     }
+  }).catch(error => {
+    console.log(error.message);
   });
 }
 
@@ -257,7 +278,7 @@ function removeCenterOfInterest(centerOfInterestId: number) {
     <div class="content">
       <h4>Qu'est-ce qui vous passionne ?</h4>
       <div class="mt-3">
-        <SearchZone id="searchBar" :search-url="matchCenterOfInterestApiUrl"
+        <SearchZone id="searchBar" :search-query="GET_CENTER_OF_INTEREST_QUERY" response-field="centerOfInterest"
                     placeholder="Rechercher un centre d'intérêt" @resultClick="addCenterOfInterest" />
         <p class="text-muted small mt-1">Choisissez au moins 3 centres d'intérêt.</p>
       </div>
