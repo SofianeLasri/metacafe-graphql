@@ -64,6 +64,7 @@ library.add(faSmile, faMicrophone,faHeart, faComment);
             </div>
 
             <div class="feed-cards">
+              <PostCard v-for="i in 5" :key="i" avatar="/src/assets/images/square-logo-with-background.avif" username="Eric" title="Test" text="Kebab ou burgi ?"/>
               <div class="post-card" v-for="i in 5" :key="i">
                 <div class="upper-part">
                   <div class="author">
@@ -91,6 +92,7 @@ library.add(faSmile, faMicrophone,faHeart, faComment);
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
