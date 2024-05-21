@@ -22,12 +22,12 @@ router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, n
     const loggedIn = window.localStorage.getItem('token');
 
     const authPage = 'home';
-    const publicPages = [authPage, 'dashboard'];
+    const publicPages = [authPage];
 
     if (!loggedIn && !publicPages.includes(to.name as string)) {
         next({name: authPage});
     } else if (loggedIn && publicPages.includes(to.name as string)) {
-        next({name: 'messages'});
+        next({name: 'dashboard'});
     } else {
         next();
     }

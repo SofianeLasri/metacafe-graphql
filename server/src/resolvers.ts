@@ -41,12 +41,10 @@ export const resolvers: Resolvers = {
             });
         },
         setCentersOfInterest: async (_, {userId, centerOfInterestIds}, {dataSources}) => {
-            // Supprime les centres d'intérêts existants pour l'utilisateur
             await dataSources.db.userInterest.deleteMany({
                 where: {userId},
             });
 
-            // Ajoute les nouveaux centres d'intérêts
             return await Promise.all(
                 centerOfInterestIds.map(centerOfInterestId =>
                     dataSources.db.userInterest.create({

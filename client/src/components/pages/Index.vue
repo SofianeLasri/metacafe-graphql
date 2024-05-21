@@ -16,10 +16,14 @@ const getAttachmentApiUrl = `${serverBaseUrl}/api/attachment/`;
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
+      code
+      message
+      success
       token
       user {
-        id
         email
+        id
+        username
       }
     }
   }
@@ -28,20 +32,15 @@ const LOGIN_MUTATION = gql`
 const REGISTER_MUTATION = gql`
   mutation Register($email: String!, $username: String!, $password: String!) {
     createUser(email: $email, username: $username, password: $password) {
-      id
-      username
-    }
-  }
-`;
-
-const GET_USER_INFOS_QUERY = gql`
-  query GetUserInfos {
-    me {
-      id
-      name
-      email
-      profilePicture
-      hasSeenIntro
+      code
+      message
+      success
+      token
+      user {
+        id
+        username
+        email
+      }
     }
   }
 `;
@@ -59,9 +58,8 @@ function handleLoginSubmit(e: SubmitEvent, loginEmailInput: HTMLInputElement, lo
     variables: data
   }).then(response => {
     const {data} = response;
-    if (data && data.login) {
-      localStorage.setItem("token", data.login.token);
-      handlePostLogin();
+    if (data && data.login.success) {
+      handlePostLogin(data.login);
     } else {
       loginError.textContent = "Une erreur est survenue";
       loginError.classList.remove("d-none");
@@ -93,11 +91,12 @@ function handleRegistrationSubmit(e: SubmitEvent, registerEmailInput: HTMLInputE
   }).then(response => {
     const { data } = response;
 
-    if (data && data.createUser.id && data.createUser.username) {
-      registerSuccess.classList.remove("d-none");
+    if (data && data.createUser.success) {
+      /*registerSuccess.classList.remove("d-none");
       registerError.classList.add("d-none");
       registerForm.classList.add("d-none");
-      loginForm.classList.remove("d-none");
+      loginForm.classList.remove("d-none");*/
+      handlePostLogin(data.createUser);
     } else {
       registerError.textContent = "Une erreur est survenue";
       registerError.classList.remove("d-none");
@@ -109,34 +108,24 @@ function handleRegistrationSubmit(e: SubmitEvent, registerEmailInput: HTMLInputE
   });
 }
 
-function handlePostLogin() {
-  client.query({
-    query: GET_USER_INFOS_QUERY,
-    fetchPolicy: 'network-only', // Pour s'assurer d'obtenir les données les plus récentes
-  }).then(response => {
-    const { data } = response;
-    if (data && data.me) {
-      const user = data.me;
-      localStorage.setItem("userId", user.id);
-      localStorage.setItem("username", user.name);
-      localStorage.setItem("email", user.email);
-      localStorage.setItem("profilePictureUrl", defaultProfilePic);
+function handlePostLogin(data: any) {
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("userId", data.user.id);
+  localStorage.setItem("username", data.user.username);
+  localStorage.setItem("email", data.user.email);
+  localStorage.setItem("profilePictureUrl", defaultProfilePic);
 
-      if (user.profilePicture !== null) {
-        localStorage.setItem("profilePictureUrl", getAttachmentApiUrl + user.profilePicture);
-      }
+  /*if (user.profilePicture !== null) {
+    localStorage.setItem("profilePictureUrl", getAttachmentApiUrl + user.profilePicture);
+  }*/
 
-      if (user.hasSeenIntro) {
-        window.location.href = router.resolve({ name: "messages" }).href;
-      } else {
-        window.location.href = router.resolve({ name: "setup" }).href;
-      }
-    } else {
-      console.log("Une erreur est survenue");
-    }
-  }).catch(error => {
-    console.log(error.message);
-  });
+  // TODO: Ajouter l'attribut hasSeenIntro dans la base de données
+  /*if (user.hasSeenIntro) {
+    window.location.href = router.resolve({ name: "dashboard" }).href;
+  } else {
+    window.location.href = router.resolve({ name: "setup" }).href;
+  }*/
+  window.location.href = router.resolve({ name: "setup" }).href;
 }
 
 onMounted(() => {
