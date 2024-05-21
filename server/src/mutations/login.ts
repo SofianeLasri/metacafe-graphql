@@ -28,6 +28,7 @@ export const login: MutationResolvers["login"] = async (
       code: 200,
       message: "User logged in successfully.",
       success: true,
+      user,
       token,
     };
   } catch (e) {
@@ -36,6 +37,7 @@ export const login: MutationResolvers["login"] = async (
       message: (e as Error).message,
       success: false,
       token: null,
+      user: null,
     };
   }
 };
