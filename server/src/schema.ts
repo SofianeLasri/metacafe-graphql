@@ -20,6 +20,8 @@ export const typeDefs = gql`
     createPost(title: String!, content: String!): Post!
     likePost(id: String!): Post!
     commentPost(id: String!, comment: String!): Post!
+    createCenterOfInterest(name: String!): CenterOfInterest!
+    setCentersOfInterest(userId: Int!, centerOfInterestIds: [Int!]!): [UserInterest!]!
   }
 
   type Query {
@@ -27,5 +29,19 @@ export const typeDefs = gql`
     user(id: String!): User!
     posts: [Post!]!
     post(id: String!): Post!
+    centersOfInterest: [CenterOfInterest!]!
+    centerOfInterest(id: Int!): CenterOfInterest!
+    centersOfInterestOfUser(userId: Int!): [CenterOfInterest!]!
+  }
+  
+  type CenterOfInterest {
+    id: Int!
+    name: String!
+  }
+  
+  type UserInterest {
+    id: Int!
+    user: User!
+    centerOfInterest: CenterOfInterest!
   }
 `;
