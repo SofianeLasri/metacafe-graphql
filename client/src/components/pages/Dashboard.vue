@@ -64,6 +64,7 @@ library.add(faSmile, faMicrophone,faHeart, faComment);
             </div>
 
             <div class="feed-cards">
+
               <div class="post-card" v-for="i in 5" :key="i">
                 <div class="upper-part">
                   <div class="author">
@@ -91,6 +92,7 @@ library.add(faSmile, faMicrophone,faHeart, faComment);
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>

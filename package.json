@@ -4,7 +4,7 @@
   "description": "Un réseau social comme les autres",
   "main": "index.js",
   "scripts": {
-    "setup": "npm install && (cd client && npm install) && (cd .. && cd server && npm install)",
+    "setup": "npm install && (cd client && npm install) && (cd .. && cd server && npm install && npx prisma migrate dev)",
     "start-client": "cd client && npm run dev:host",
     "start-server": "cd server && npm run start",
     "start": "concurrently \"npm run start-client\" \"npm run start-server\""
