@@ -93,7 +93,7 @@ function handleRegistrationSubmit(e: SubmitEvent, registerEmailInput: HTMLInputE
   }).then(response => {
     const { data } = response;
 
-    if (data && data.id && data.username) {
+    if (data && data.createUser.id && data.createUser.username) {
       registerSuccess.classList.remove("d-none");
       registerError.classList.add("d-none");
       registerForm.classList.add("d-none");
