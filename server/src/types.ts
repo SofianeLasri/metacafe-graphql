@@ -17,31 +17,27 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type CenterOfInterest = {
-  __typename?: 'CenterOfInterest';
-  id: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
+export type LoginResponse = {
+  __typename?: 'LoginResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+  token?: Maybe<Scalars['String']['output']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   commentPost: Post;
-  createCenterOfInterest: CenterOfInterest;
   createPost: Post;
   createUser: User;
   likePost: Post;
-  setCentersOfInterest: Array<UserInterest>;
+  login: LoginResponse;
 };
 
 
 export type MutationCommentPostArgs = {
   comment: Scalars['String']['input'];
   id: Scalars['String']['input'];
-};
-
-
-export type MutationCreateCenterOfInterestArgs = {
-  name: Scalars['String']['input'];
 };
 
 
@@ -63,9 +59,9 @@ export type MutationLikePostArgs = {
 };
 
 
-export type MutationSetCentersOfInterestArgs = {
-  centerOfInterestIds: Array<Scalars['Int']['input']>;
-  userId: Scalars['Int']['input'];
+export type MutationLoginArgs = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 export type Post = {
@@ -78,23 +74,10 @@ export type Post = {
 
 export type Query = {
   __typename?: 'Query';
-  centerOfInterest: CenterOfInterest;
-  centersOfInterest: Array<CenterOfInterest>;
-  centersOfInterestOfUser: Array<CenterOfInterest>;
   post: Post;
   posts: Array<Post>;
   user: User;
   users: Array<User>;
-};
-
-
-export type QueryCenterOfInterestArgs = {
-  id: Scalars['Int']['input'];
-};
-
-
-export type QueryCentersOfInterestOfUserArgs = {
-  userId: Scalars['Int']['input'];
 };
 
 
@@ -111,15 +94,7 @@ export type User = {
   __typename?: 'User';
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
-  password: Scalars['String']['output'];
   username: Scalars['String']['output'];
-};
-
-export type UserInterest = {
-  __typename?: 'UserInterest';
-  centerOfInterest: CenterOfInterest;
-  id: Scalars['Int']['output'];
-  user: User;
 };
 
 
@@ -194,42 +169,41 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  CenterOfInterest: ResolverTypeWrapper<CenterOfInterest>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  LoginResponse: ResolverTypeWrapper<LoginResponse>;
   Mutation: ResolverTypeWrapper<{}>;
   Post: ResolverTypeWrapper<Post>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
-  UserInterest: ResolverTypeWrapper<UserInterest>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
-  CenterOfInterest: CenterOfInterest;
   Int: Scalars['Int']['output'];
+  LoginResponse: LoginResponse;
   Mutation: {};
   Post: Post;
   Query: {};
   String: Scalars['String']['output'];
   User: User;
-  UserInterest: UserInterest;
 };
 
-export type CenterOfInterestResolvers<ContextType = any, ParentType extends ResolversParentTypes['CenterOfInterest'] = ResolversParentTypes['CenterOfInterest']> = {
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   commentPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCommentPostArgs, 'comment' | 'id'>>;
-  createCenterOfInterest?: Resolver<ResolversTypes['CenterOfInterest'], ParentType, ContextType, RequireFields<MutationCreateCenterOfInterestArgs, 'name'>>;
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'content' | 'title'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'password' | 'username'>>;
   likePost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationLikePostArgs, 'id'>>;
-  setCentersOfInterest?: Resolver<Array<ResolversTypes['UserInterest']>, ParentType, ContextType, RequireFields<MutationSetCentersOfInterestArgs, 'centerOfInterestIds' | 'userId'>>;
+  login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
 };
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
@@ -241,9 +215,6 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  centerOfInterest?: Resolver<ResolversTypes['CenterOfInterest'], ParentType, ContextType, RequireFields<QueryCenterOfInterestArgs, 'id'>>;
-  centersOfInterest?: Resolver<Array<ResolversTypes['CenterOfInterest']>, ParentType, ContextType>;
-  centersOfInterestOfUser?: Resolver<Array<ResolversTypes['CenterOfInterest']>, ParentType, ContextType, RequireFields<QueryCentersOfInterestOfUserArgs, 'userId'>>;
   post?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<QueryPostArgs, 'id'>>;
   posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
@@ -253,24 +224,15 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UserInterestResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserInterest'] = ResolversParentTypes['UserInterest']> = {
-  centerOfInterest?: Resolver<ResolversTypes['CenterOfInterest'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type Resolvers<ContextType = any> = {
-  CenterOfInterest?: CenterOfInterestResolvers<ContextType>;
+  LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
-  UserInterest?: UserInterestResolvers<ContextType>;
 };
 

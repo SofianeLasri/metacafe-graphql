@@ -5,7 +5,6 @@ export const typeDefs = gql`
     id: Int!
     username: String!
     email: String!
-    password: String!
   }
 
   type Post {
@@ -22,6 +21,7 @@ export const typeDefs = gql`
     commentPost(id: String!, comment: String!): Post!
     createCenterOfInterest(name: String!): CenterOfInterest!
     setCentersOfInterest(userId: Int!, centerOfInterestIds: [Int!]!): [UserInterest!]!
+    login(email: String!, password: String!): LoginResponse!
   }
 
   type Query {
@@ -43,5 +43,12 @@ export const typeDefs = gql`
     id: Int!
     user: User!
     centerOfInterest: CenterOfInterest!
+  }
+
+  type LoginResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    token: String
   }
 `;
