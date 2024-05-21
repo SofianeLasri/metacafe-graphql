@@ -33,3 +33,17 @@ export type Activity = {
 }
 
 export type Sender = "me" | "friend";
+
+export type User = {
+    id: number;
+    username: string;
+    email: string;
+    profilePicture: string;
+}
+
+export type Post = {
+    id: number;
+    content: string;
+    title: string;
+    author: User;
+}

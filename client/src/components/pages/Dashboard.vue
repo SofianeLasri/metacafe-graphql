@@ -4,12 +4,49 @@ import ProfileCard from "~@/components/components/ProfileCard.vue";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faSmile, faMicrophone, faHeart} from "@fortawesome/free-solid-svg-icons";
 import {faComment} from '@fortawesome/free-regular-svg-icons'
+import PostCard from "~@/components/components/PostCard.vue";
+import PostWriter from "~@/components/components/PostWriter.vue";
+import {h, onMounted, render} from "vue";
+import {Post} from "~@/types.ts";
 
 library.add(faSmile, faMicrophone,faHeart, faComment);
 
 const userProfilePictureUrl: string = localStorage.getItem("profilePictureUrl")!;
 const userName: string = localStorage.getItem("username")!;
 const userId: number = parseInt(localStorage.getItem("userId")!);
+
+function addPostToFriendFeed(post: Post) {
+  addPostToFeed(post, "friend");
+}
+
+function addPostToPublicFeed(post: Post) {
+  addPostToFeed(post, "public");
+}
+
+function addPostToFeed(post: Post, feed: string) {
+  const feedElement = document.getElementById(feed + "Feed");
+
+  if (feedElement) {
+    const container = document.createElement('div');
+
+    const vnode = h(PostCard, {
+      id: post.id,
+      avatar: userProfilePictureUrl,
+      username: userName,
+      title: post.title,
+      text: post.content,
+    });
+
+    render(vnode, container);
+
+    feedElement.insertBefore(container, feedElement.firstChild);
+  }
+}
+
+onMounted(() => {
+
+
+});
 
 </script>
 
@@ -47,57 +84,41 @@ const userId: number = parseInt(localStorage.getItem("userId")!);
 
         <!-- Main content -->
         <div class="feed-wrapper">
-          <div class="feed-col" v-for="i in 2" :key="i">
+          <!-- Friends feed -->
+          <div class="feed-col">
             <div class="col-header">
               <div class="text-white">
                 <h3>Le café du coin</h3>
                 <p>C'est ici que se retrouvent les ragots entre amis</p>
               </div>
-              <div class="card d-flex flex-column gap-2">
-                <textarea class="form-control" name="post" id="post" rows="3"
-                          placeholder="Exprimez-vous..."></textarea>
-                <div class="d-flex justify-content-end">
-                  <button type="button" class="btn btn-link text-muted" id="pickEmojiBtn">
-                    <font-awesome-icon :icon="['fas', 'face-smile']"/>
-                  </button>
-                  <button type="button" class="btn btn-link text-muted" id="textToSpeechBtn">
-                    <font-awesome-icon :icon="['fas', 'microphone']"/>
-                  </button>
-                  <button class="btn btn-primary">Poster</button>
-                </div>
-              </div>
+
+              <PostWriter col="friends"  @hasSubmittedPost="addPostToFriendFeed"/>
             </div>
 
-            <div class="feed-cards">
-              <PostCard v-for="i in 5" :key="i" avatar="/src/assets/images/square-logo-with-background.avif" username="Eric" title="Test" text="Kebab ou burgi ?"/>
-              <div class="post-card" v-for="i in 5" :key="i">
-                <div class="upper-part">
-                  <div class="author">
-                    <div class="profile-picture"
-                         style="background-image: url('/src/assets/images/square-logo-with-background.avif')"></div>
-                    <div class="user-name">
-                      Eric
-                    </div>
-                  </div>
-                  <p class="mt-2">
-                    Kebab ou burgi ? La raison me dit que je vais encore perdre des pv mais j’ai trop la dale.
-                  </p>
-                </div>
-                <div class="lower-part">
-                  <div class="small text-muted">
-                    aujd à 11H31
-                  </div>
-                  <div class="d-flex">
-                    <button type="button" class="btn btn-link text-muted" id="commentBtn">
-                      <font-awesome-icon :icon="['far', 'comment']" class="action-icon"/> 6
-                    </button>
-                    <button type="button" class="btn btn-link text-primary" id="likeBtn">
-                      <font-awesome-icon :icon="['fas', 'heart']" class="action-icon"/> 4
-                    </button>
-                  </div>
-                </div>
+            <div class="feed-cards" id="friendFeed">
+              <PostCard v-for="i in 5" :key="i"
+                        :id="2"
+                        avatar="/src/assets/images/square-logo-with-background.avif"
+                        username="Eric" title="Test" text="Kebab ou burgi ?"/>
+            </div>
+          </div>
+
+          <!-- Public feed -->
+          <div class="feed-col">
+            <div class="col-header">
+              <div class="text-white">
+                <h3>Le grand salon</h3>
+                <p>Tous les intellectuels de métacafé se retrouvent ici</p>
               </div>
 
+              <PostWriter col="public" @hasSubmittedPost="addPostToPublicFeed"/>
+            </div>
+
+            <div class="feed-cards" id="publicFeed">
+              <PostCard v-for="i in 5" :key="i"
+                        :id="2"
+                        avatar="/src/assets/images/square-logo-with-background.avif"
+                        username="Eric" title="Test" text="Kebab ou burgi ?"/>
             </div>
           </div>
         </div>

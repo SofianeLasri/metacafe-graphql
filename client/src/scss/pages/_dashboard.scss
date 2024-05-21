@@ -74,9 +74,11 @@
             .feed-wrapper {
                 display: flex;
                 gap: 2.5rem;
+                flex-grow: 1;
 
-                .feed-col{
+                .feed-col {
                     display: flex;
+                    flex-grow: 1;
                     flex-direction: column;
                     gap: 1.5rem;
 
