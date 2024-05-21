@@ -23,13 +23,14 @@ export type LoginResponse = {
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
   token?: Maybe<Scalars['String']['output']>;
+  user?: Maybe<User>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   commentPost: Post;
   createPost: Post;
-  createUser: User;
+  createUser: LoginResponse;
   likePost: Post;
   login: LoginResponse;
 };
@@ -77,17 +78,23 @@ export type Query = {
   post: Post;
   posts: Array<Post>;
   user: User;
+  userPosts: Array<Post>;
   users: Array<User>;
 };
 
 
 export type QueryPostArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
 };
 
 
 export type QueryUserArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryUserPostsArgs = {
+  userId: Scalars['Int']['input'];
 };
 
 export type User = {
@@ -195,13 +202,14 @@ export type LoginResponseResolvers<ContextType = any, ParentType extends Resolve
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   commentPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCommentPostArgs, 'comment' | 'id'>>;
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'content' | 'title'>>;
-  createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'password' | 'username'>>;
+  createUser?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'password' | 'username'>>;
   likePost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationLikePostArgs, 'id'>>;
   login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
 };
@@ -218,6 +226,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   post?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<QueryPostArgs, 'id'>>;
   posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
+  userPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryUserPostsArgs, 'userId'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
 };
 

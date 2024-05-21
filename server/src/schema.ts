@@ -15,7 +15,11 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    createUser(email: String!, username: String!, password: String!): User!
+    createUser(
+      email: String!
+      username: String!
+      password: String!
+    ): LoginResponse!
     createPost(title: String!, content: String!): Post!
     likePost(id: String!): Post!
     commentPost(id: String!, comment: String!): Post!
@@ -24,15 +28,17 @@ export const typeDefs = gql`
 
   type Query {
     users: [User!]!
-    user(id: String!): User!
+    user(id: Int!): User!
     posts: [Post!]!
-    post(id: String!): Post!
+    post(id: Int!): Post!
+    userPosts(userId: Int!): [Post!]!
   }
 
   type LoginResponse {
     code: Int!
     success: Boolean!
     message: String!
+    user: User
     token: String
   }
 `;

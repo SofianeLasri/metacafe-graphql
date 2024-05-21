@@ -4,6 +4,7 @@ import { typeDefs } from "./schema.js";
 import { resolvers } from "./resolvers.js";
 import { DataSourceContext } from "./context.js";
 import db from "./datasources/db.js";
+import { getUser } from "./modules/auth.js";
 
 const server = new ApolloServer<DataSourceContext>({
   typeDefs,
@@ -13,10 +14,14 @@ const server = new ApolloServer<DataSourceContext>({
 const { url } = await startStandaloneServer(server, {
   listen: { port: 4000 },
   context: async ({ req }) => {
+    const token = req.headers.authorization?.split("Bearer ")?.[1];
+    const user = token ? getUser(token) : null;
+
     return {
       dataSources: {
         db,
       },
+      user,
     };
   },
 });
