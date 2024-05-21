@@ -3,6 +3,8 @@ import defaultProfilePic from "~@/assets/images/square-logo-with-background.avif
 import emojiByGroup from "unicode-emoji-json/data-by-group.json";
 import {emojiDataByGroup, Post} from "~@/types.ts";
 import {onMounted} from "vue";
+import {gql} from "@apollo/client/core";
+import client from './../../apolloClient';
 
 const props = defineProps<{
   col: string;
@@ -18,6 +20,14 @@ const user = {
   email: "email",
   profilePicture: defaultProfilePic,
 };
+
+const CREATE_POST_MUTATION = gql`
+mutation CreatePost($title: String!, $content: String!) {
+  createPost(title: $title, content: $content) {
+    id
+  }
+}
+`;
 
 const textAreaId = props.col + "PostWriterTextArea";
 const pickEmojiBtnId = props.col + "PickEmojiBtn";
@@ -62,6 +72,20 @@ function createEmojiGroupsDomElements(emojiData: emojiDataByGroup, emojiListCont
 
 function createPost(content: string): Post
 {
+  let data = {
+    title: "placeholder",
+    content: content
+  };
+  client.mutate({
+    mutation: CREATE_POST_MUTATION,
+    variables: data,
+    context: {
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    }
+  });
+
   return {
     id: 0,
     content: content,
