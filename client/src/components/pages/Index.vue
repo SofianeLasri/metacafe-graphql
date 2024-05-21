@@ -78,8 +78,7 @@ function handleRegistrationSubmit(e: SubmitEvent, registerEmailInput: HTMLInputE
   const data = {
     email: registerEmailInput.value,
     name: registerNameInput.value,
-    password: registerPasswordInput.value,
-    confirmPassword: registerPasswordConfirmInput.value
+    password: registerPasswordInput.value
   };
 
   if (registerPasswordInput.value !== registerPasswordConfirmInput.value) {
