@@ -1,6 +1,7 @@
 import { commentPost } from "./mutations/comment-post.js";
 import { createPost } from "./mutations/create-post.js";
 import { createUser } from "./mutations/create-user.js";
+import { likePost } from "./mutations/like-post.js";
 import { login } from "./mutations/login.js";
 import { Resolvers } from "./types.js";
 
@@ -29,6 +30,30 @@ export const resolvers: Resolvers = {
         },
         include: { user: true, post: { include: { author: true } } },
       }),
+    postLikesCount: async (_, { postId }, { dataSources }) => {
+      const likes = await dataSources.db.like.findMany({
+        where: {
+          postId,
+        },
+      });
+
+      return {
+        count: likes.length,
+      };
+    },
+    currentUserLikedPost: async (_, { postId }, { dataSources, user }) => {
+      const like = await dataSources.db.like.findFirst({
+        where: {
+          userId: user.id,
+          postId,
+        },
+      });
+
+      return {
+        currentUserlikedPost: like !== null && like !== undefined,
+      };
+    },
+
     centersOfInterest: (_, __, { dataSources }) =>
       dataSources.db.centerOfInterest.findMany(),
     centersOfInterestOfUser: async (_, { userId }, { dataSources }) => {
@@ -47,6 +72,7 @@ export const resolvers: Resolvers = {
     login,
     createPost,
     commentPost,
+    likePost,
     createCenterOfInterest: async (_, data, { dataSources }) => {
       return await dataSources.db.centerOfInterest.create({
         data,

@@ -18,6 +18,7 @@ model User {
   posts        Post[]
   UserInterest UserInterest[]
   comments     Comment[]
+  likes        Like[]
 }
 
 model Post {
@@ -27,6 +28,7 @@ model Post {
   author   User      @relation(fields: [authorId], references: [id])
   authorId Int
   comments Comment[]
+  likes    Like[]
 }
 
 model CenterOfInterest {
@@ -52,4 +54,12 @@ model Comment {
   body   String
   user   User   @relation(fields: [userId], references: [id])
   post   Post   @relation(fields: [postId], references: [id])
+}
+
+model Like {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  postId Int
+  user   User @relation(fields: [userId], references: [id])
+  post   Post @relation(fields: [postId], references: [id])
 }
