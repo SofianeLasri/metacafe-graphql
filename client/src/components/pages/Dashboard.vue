@@ -1,11 +1,16 @@
 <script setup lang="ts">
-
+import defaultProfilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import ProfileCard from "~@/components/components/ProfileCard.vue";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faSmile, faMicrophone, faHeart} from "@fortawesome/free-solid-svg-icons";
 import {faComment} from '@fortawesome/free-regular-svg-icons'
 
 library.add(faSmile, faMicrophone,faHeart, faComment);
+
+const userProfilePictureUrl: string = localStorage.getItem("profilePictureUrl")!;
+const userName: string = localStorage.getItem("username")!;
+const userId: number = parseInt(localStorage.getItem("userId")!);
+
 </script>
 
 <template>
@@ -26,7 +31,7 @@ library.add(faSmile, faMicrophone,faHeart, faComment);
         <!-- Sidebar -->
         <div class="sidebar">
           <div class="card user-profile">
-            <ProfileCard :id="1" avatar="/src/assets/images/square-logo-with-background.avif" username="Gordon Freeman"
+            <ProfileCard :id="1" :avatar="userProfilePictureUrl" :username="userName"
                          status="En ligne"/>
           </div>
 
@@ -34,7 +39,7 @@ library.add(faSmile, faMicrophone,faHeart, faComment);
             <h4>Amis (6)</h4>
 
             <div class="d-flex flex-column mt-2">
-              <ProfileCard :id="1" avatar="/src/assets/images/square-logo-with-background.avif" username="Jacqueline"
+              <ProfileCard :id="1" :avatar="defaultProfilePic" username="Jacqueline"
                            status="En ligne" v-for="i in 6" :key="i"/>
             </div>
           </div>

@@ -21,7 +21,11 @@ export const resolvers: Resolvers = {
                     authorId: userId,
                 },
             }),
-        centersOfInterest: (_, __, {dataSources}) => dataSources.db.centerOfInterest.findMany(),
+        centersOfInterest: (_, {name}, {dataSources}) => {
+            return dataSources.db.centerOfInterest.findMany({
+                where: name ? {name: {contains: name}} : {},
+            });
+        },
         centersOfInterestOfUser: async (_, {userId}, {dataSources}) => {
             const userInterests = await dataSources.db.userInterest.findMany({
                 where: {userId},
@@ -30,6 +34,7 @@ export const resolvers: Resolvers = {
 
             return userInterests.map((ui: { centerOfInterest: any; }) => ui.centerOfInterest);
         },
+
     },
     Mutation: {
         createUser,

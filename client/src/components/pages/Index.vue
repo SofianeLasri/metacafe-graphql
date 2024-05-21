@@ -125,7 +125,7 @@ function handlePostLogin(data: any) {
   } else {
     window.location.href = router.resolve({ name: "setup" }).href;
   }*/
-  window.location.href = router.resolve({ name: "setup" }).href;
+  window.location.href = router.resolve({ name: "dashboard" }).href;
 }
 
 onMounted(() => {

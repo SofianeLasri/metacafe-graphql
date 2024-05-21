@@ -12,8 +12,8 @@ const updateProfileApiUrl: string = `${serverBaseUrl}/api/user/me`;
 const getAttachmentApiUrl = `${serverBaseUrl}/api/attachment/`;
 
 const GET_CENTER_OF_INTEREST_QUERY: string = `
-  query GetCenterOfInterest($search: String!) {
-    centerOfInterest(search: $search) {
+  query CentersOfInterest($search: String!) {
+    centersOfInterest(name: $search) {
       id
       name
     }
@@ -211,6 +211,7 @@ function getCentersOfInterest() {
 }
 
 function addCenterOfInterest(centerOfInterest: HTMLElement|centerOfInterest) {
+  console.log(centerOfInterest);
   let centerOfInterestId: number;
   let centerOfInterestName: string;
 
@@ -222,6 +223,7 @@ function addCenterOfInterest(centerOfInterest: HTMLElement|centerOfInterest) {
     centerOfInterestName = centerOfInterest.name;
   }
 
+  console.log("We found id: " + centerOfInterestId + " and name: " + centerOfInterestName)
   centersOfInterest.push({id: centerOfInterestId, name: centerOfInterestName});
 
   let tempDiv = document.createElement("div");
@@ -278,7 +280,7 @@ function removeCenterOfInterest(centerOfInterestId: number) {
     <div class="content">
       <h4>Qu'est-ce qui vous passionne ?</h4>
       <div class="mt-3">
-        <SearchZone id="searchBar" :search-query="GET_CENTER_OF_INTEREST_QUERY" response-field="centerOfInterest"
+        <SearchZone id="searchBar" :search-query="GET_CENTER_OF_INTEREST_QUERY" response-field="centersOfInterest"
                     placeholder="Rechercher un centre d'intérêt" @resultClick="addCenterOfInterest" />
         <p class="text-muted small mt-1">Choisissez au moins 3 centres d'intérêt.</p>
       </div>

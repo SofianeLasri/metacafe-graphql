@@ -34,7 +34,7 @@ export const typeDefs = gql`
     posts: [Post!]!
     post(id: Int!): Post!
     userPosts(userId: Int!): [Post!]!
-    centersOfInterest: [CenterOfInterest!]!
+    centersOfInterest(name: String): [CenterOfInterest!]!
     centerOfInterest(id: Int!): CenterOfInterest!
     centersOfInterestOfUser(userId: Int!): [CenterOfInterest!]!
   }

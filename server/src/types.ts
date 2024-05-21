@@ -110,6 +110,11 @@ export type QueryCenterOfInterestArgs = {
 };
 
 
+export type QueryCentersOfInterestArgs = {
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryCentersOfInterestOfUserArgs = {
   userId: Scalars['Int']['input'];
 };
@@ -275,7 +280,7 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   centerOfInterest?: Resolver<ResolversTypes['CenterOfInterest'], ParentType, ContextType, RequireFields<QueryCenterOfInterestArgs, 'id'>>;
-  centersOfInterest?: Resolver<Array<ResolversTypes['CenterOfInterest']>, ParentType, ContextType>;
+  centersOfInterest?: Resolver<Array<ResolversTypes['CenterOfInterest']>, ParentType, ContextType, Partial<QueryCentersOfInterestArgs>>;
   centersOfInterestOfUser?: Resolver<Array<ResolversTypes['CenterOfInterest']>, ParentType, ContextType, RequireFields<QueryCentersOfInterestOfUserArgs, 'userId'>>;
   post?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<QueryPostArgs, 'id'>>;
   posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>;
