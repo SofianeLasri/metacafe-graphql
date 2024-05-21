@@ -19,7 +19,7 @@ export const typeDefs = gql`
     createPost(title: String!, content: String!): Post!
     likePost(id: String!): Post!
     commentPost(id: String!, comment: String!): Post!
-    login(email: String!, password: String!): 
+    login(email: String!, password: String!): LoginResponse!
   }
 
   type Query {

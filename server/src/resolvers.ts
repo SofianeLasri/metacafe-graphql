@@ -1,4 +1,6 @@
-import { Resolvers } from "./types";
+import { createUser } from "./mutations/create-user.js";
+import { login } from "./mutations/login.js";
+import { Resolvers } from "./types.js";
 
 export const resolvers: Resolvers = {
   Query: {
@@ -6,12 +8,7 @@ export const resolvers: Resolvers = {
     posts: (_, __, { dataSources }) => dataSources.db.post.findMany(),
   },
   Mutation: {
-    createUser: async (_, data, { dataSources }) => {
-      const user = await dataSources.db.user.create({
-        data,
-      });
-
-      return user;
-    },
+    createUser,
+    login,
   },
 };

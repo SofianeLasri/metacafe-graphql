@@ -1,15 +1,15 @@
 import { comparePassword, createJWT } from "../modules/auth.js";
 import { MutationResolvers } from "../types";
 
-export const signIn: MutationResolvers["login"] = async (
+export const login: MutationResolvers["login"] = async (
   _,
-  { username, password },
+  { email, password },
   { dataSources }
 ) => {
   try {
     const user = await dataSources.db.user.findUniqueOrThrow({
       where: {
-        username,
+        email,
       },
     });
 
@@ -26,7 +26,7 @@ export const signIn: MutationResolvers["login"] = async (
 
     return {
       code: 200,
-      message: "User has been signed in",
+      message: "User logged in successfully.",
       success: true,
       token,
     };
