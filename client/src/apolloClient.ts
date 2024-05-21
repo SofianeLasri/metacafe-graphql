@@ -3,7 +3,7 @@ import { setContext } from '@apollo/client/link/context';
 import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 
 const httpLink = createUploadLink({
-    uri: import.meta.env.VITE_GRAPHQL_URL, // Remplace par l'URL de ton serveur GraphQL
+    uri: import.meta.env.VITE_BACKEND_URL,
 });
 
 const authLink = setContext((_, { headers }) => {

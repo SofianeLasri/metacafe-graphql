@@ -26,10 +26,10 @@ const LOGIN_MUTATION = gql`
 `;
 
 const REGISTER_MUTATION = gql`
-  mutation Register($email: String!, $name: String!, $password: String!, $confirmPassword: String!) {
-    register(email: $email, name: $name, password: $password, confirmPassword: $confirmPassword) {
-      success
-      message
+  mutation Register($email: String!, $name: String!, $password: String!) {
+    createUser(email: $email, name: $name, password: $password) {
+      id
+      username
     }
   }
 `;
@@ -93,18 +93,20 @@ function handleRegistrationSubmit(e: SubmitEvent, registerEmailInput: HTMLInputE
     variables: data
   }).then(response => {
     const { data } = response;
-    if (data && data.register && data.register.success) {
+
+    if (data && data.id && data.username) {
       registerSuccess.classList.remove("d-none");
       registerError.classList.add("d-none");
       registerForm.classList.add("d-none");
       loginForm.classList.remove("d-none");
     } else {
-      registerError.textContent = data.register.message || "Une erreur est survenue";
+      registerError.textContent = "Une erreur est survenue";
       registerError.classList.remove("d-none");
     }
   }).catch(error => {
-    registerError.textContent = error.message;
+    registerError.textContent = "Une erreur est survenue";
     registerError.classList.remove("d-none");
+    console.error(error.message);
   });
 }
 
