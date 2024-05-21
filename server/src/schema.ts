@@ -5,7 +5,6 @@ export const typeDefs = gql`
     id: Int!
     username: String!
     email: String!
-    password: String!
   }
 
   type Post {
@@ -20,6 +19,7 @@ export const typeDefs = gql`
     createPost(title: String!, content: String!): Post!
     likePost(id: String!): Post!
     commentPost(id: String!, comment: String!): Post!
+    login(email: String!, password: String!): 
   }
 
   type Query {
@@ -27,5 +27,12 @@ export const typeDefs = gql`
     user(id: String!): User!
     posts: [Post!]!
     post(id: String!): Post!
+  }
+
+  type LoginResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    token: String
   }
 `;
