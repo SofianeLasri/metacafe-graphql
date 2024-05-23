@@ -17,14 +17,18 @@ model User {
   password     String
   posts        Post[]
   UserInterest UserInterest[]
+  comments     Comment[]
+  likes        Like[]
 }
 
 model Post {
-  id       Int    @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   title    String
   content  String
-  author   User   @relation(fields: [authorId], references: [id])
+  author   User      @relation(fields: [authorId], references: [id])
   authorId Int
+  comments Comment[]
+  likes    Like[]
 }
 
 model CenterOfInterest {
@@ -41,4 +45,21 @@ model UserInterest {
   centerOfInterest   CenterOfInterest @relation(fields: [centerOfInterestId], references: [id])
 
   @@unique([userId, centerOfInterestId])
+}
+
+model Comment {
+  id     Int    @id @default(autoincrement())
+  userId Int
+  postId Int
+  body   String
+  user   User   @relation(fields: [userId], references: [id])
+  post   Post   @relation(fields: [postId], references: [id])
+}
+
+model Like {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  postId Int
+  user   User @relation(fields: [userId], references: [id])
+  post   Post @relation(fields: [postId], references: [id])
 }

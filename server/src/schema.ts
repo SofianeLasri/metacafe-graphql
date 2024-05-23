@@ -21,10 +21,13 @@ export const typeDefs = gql`
       password: String!
     ): LoginResponse!
     createPost(title: String!, content: String!): Post!
-    likePost(id: String!): Post!
-    commentPost(id: String!, comment: String!): Post!
+    likePost(postId: Int!): LikeResponse!
+    commentPost(postId: Int!, body: String!): Comment!
     createCenterOfInterest(name: String!): CenterOfInterest!
-    setCentersOfInterest(userId: Int!, centerOfInterestIds: [Int!]!): [UserInterest!]!
+    setCentersOfInterest(
+      userId: Int!
+      centerOfInterestIds: [Int!]!
+    ): [UserInterest!]!
     login(email: String!, password: String!): LoginResponse!
   }
 
@@ -34,20 +37,38 @@ export const typeDefs = gql`
     posts: [Post!]!
     post(id: Int!): Post!
     userPosts(userId: Int!): [Post!]!
+    postComments(postId: Int!): [Comment!]!
+    postLikesCount(postId: Int!): LikesCountResponse!
+    currentUserLikedPost(postId: Int!): CurrentUserLikedPostResponse!
     centersOfInterest(name: String): [CenterOfInterest!]!
     centerOfInterest(id: Int!): CenterOfInterest!
     centersOfInterestOfUser(userId: Int!): [CenterOfInterest!]!
   }
-  
+
+  type LikesCountResponse {
+    count: Int!
+  }
+
+  type CurrentUserLikedPostResponse {
+    currentUserlikedPost: Boolean!
+  }
+
   type CenterOfInterest {
     id: Int!
     name: String!
   }
-  
+
   type UserInterest {
     id: Int!
     user: User!
     centerOfInterest: CenterOfInterest!
+  }
+
+  type Comment {
+    id: Int!
+    user: User!
+    post: Post!
+    body: String!
   }
 
   type LoginResponse {
@@ -56,5 +77,11 @@ export const typeDefs = gql`
     message: String!
     user: User
     token: String
+  }
+
+  type LikeResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
   }
 `;
