@@ -1,0 +1,32 @@
+@use "sass:map";
+
+.emoji-picker {
+    position: absolute;
+    display: none;
+    background-color: $dark;
+    color: $white;
+    width: 100%;
+    border: .125rem solid $primary;
+    border-radius: $border-radius;
+    padding: map.get($spacers, 3);
+    height: 20rem;
+    overflow-y: auto;
+    bottom: -1rem;
+    transform: translateY(100%);
+    user-select: none;
+
+    &.active {
+        display: block;
+    }
+
+    .group {
+        .emojis {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(3rem, 1fr));
+
+            .emoji {
+                cursor: pointer;
+            }
+        }
+    }
+}

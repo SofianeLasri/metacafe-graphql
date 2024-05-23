@@ -100,10 +100,9 @@ onMounted(() => {
   const textToSpeechBtnElement = document.getElementById(textToSpeechBtnId)!;
   const sendPostBtnElement = document.getElementById(sendPostBtnId)!;
   const emojiPicker = document.getElementById(emojiPickerId)!;
-  const emojiListContainer = document.getElementById("emojiListContainer")!;
+  const emojiListContainer = document.getElementById(emojiListContainerId)!;
 
-  // TODO: Terminer l'implémentation d'un emoji picker
-  //createEmojiGroupsDomElements(emojiDataByGroup, emojiListContainer, textareaElement);
+  createEmojiGroupsDomElements(emojiDataByGroup, emojiListContainer, textareaElement);
 
   pickEmojiBtnElement.addEventListener("click", () => {
     emojiPicker.classList.toggle("active");
@@ -131,13 +130,13 @@ onMounted(() => {
       </button>
       <button :id="sendPostBtnId" class="btn btn-primary">Poster</button>
     </div>
+  </div>
 
-    <div class="popup d-none" :id="emojiPickerId">
-      <div class="fw-bold">
-        Choisir un emoji
-      </div>
-      <div :id="emojiListContainerId"></div>
+  <div class="emoji-picker" :id="emojiPickerId">
+    <div class="fw-bold">
+      Choisir un emoji
     </div>
+    <div :id="emojiListContainerId"></div>
   </div>
 </template>
 
