@@ -6,10 +6,10 @@ Métacafé est un projet scolaire dont l'objectif est de réaliser un réseau so
 publier des articles, commenter les publications d'autres utilisateurs, et "liker" des articles.
 
 Réalisé sur la base front de [https://github.com/SofianeLasri/metacafe](Métacafé) par :
-- Floriant BIENDINÉ
 - Sofiane LASRI
-- Dorian MAVOUNGOUD
 - Paul-Henry NGOUNOU
+- Dorian MAVOUNGOUD
+- Floriant BIENDINÉ
 
 # Fonctionnalités
 

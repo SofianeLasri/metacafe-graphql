@@ -11,7 +11,7 @@ function handleLogout() {
 }
 
 onBeforeMount(() => {
-  fetch(logoutApiUrl, {
+  /*fetch(logoutApiUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -19,8 +19,7 @@ onBeforeMount(() => {
     }
   }).then(async (response) => {
     if (response.status === 200) {
-      window.localStorage.removeItem("token");
-      window.location.href = router.resolve({name: "home"}).href;
+      handleLogout()
     } else {
       const isResponseJson = response.headers.get("content-type")?.includes("application/json");
       if (isResponseJson) {
@@ -30,8 +29,8 @@ onBeforeMount(() => {
         console.error("Une erreur est survenue");
       }
     }
-  });
-
+  });*/
+  handleLogout()
 });
 </script>
 
