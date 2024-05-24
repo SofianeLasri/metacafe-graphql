@@ -97,7 +97,7 @@ onMounted(() => {
 
             <div class="feed-cards" id="friendFeed">
               <PostCard v-for="i in 5" :key="i"
-                        :id="2"
+                        :id="1"
                         avatar="/src/assets/images/square-logo-with-background.avif"
                         username="Eric" title="Test" text="Kebab ou burgi ?"/>
             </div>
