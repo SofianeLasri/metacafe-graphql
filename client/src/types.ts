@@ -1,4 +1,4 @@
-export type emojiDataByGroup = {
+export type EmojiDataByGroup = {
     [key: string]: {
         "emoji": string;
         "skin_tone_support": boolean;

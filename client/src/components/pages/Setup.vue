@@ -86,6 +86,7 @@ onMounted(() => {
   });
 
   const handleImageUpload = (event: Event) => {
+    // TODO: Implémenter l'envoie de photos de profil
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
 
@@ -123,6 +124,7 @@ onMounted(() => {
   }
 
   function finishSetup() {
+    // TODO: Implémenter l'envoie de photos de profil
     /*client.mutate({
       mutation: UPDATE_PROFILE_MUTATION,
       variables: {

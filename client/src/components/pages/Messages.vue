@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SideBar from "~@/components/components/SideBar.vue";
 import {onMounted, ref} from "vue";
-import {userPublicProfile, emojiDataByGroup, Activity} from "~@/types.ts";
+import {userPublicProfile, EmojiDataByGroup, Activity} from "~@/types.ts";
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faSmile, faImage} from '@fortawesome/free-regular-svg-icons'
 import {faMicrophone, faBars} from "@fortawesome/free-solid-svg-icons";
@@ -23,7 +23,7 @@ const friends = ref<userPublicProfile[]>([]);
 const activities = ref<Activity[]>([]);
 const isLoading = ref(0);
 
-const emojiDataByGroup: emojiDataByGroup = JSON.parse(JSON.stringify(emojiByGroup));
+const emojiDataByGroup: EmojiDataByGroup = JSON.parse(JSON.stringify(emojiByGroup));
 
 let conversation: HTMLElement | null = null;
 let noConversation: HTMLElement | null = null;
@@ -187,7 +187,7 @@ onMounted(() => {
   }
 });
 
-function createEmojiGroupsDomElements(emojiData: emojiDataByGroup, emojiListContainer: HTMLElement, messageInput: HTMLInputElement) {
+function createEmojiGroupsDomElements(emojiData: EmojiDataByGroup, emojiListContainer: HTMLElement, messageInput: HTMLInputElement) {
   for (const group in emojiData) {
     const groupDomElement = document.createElement("div");
     groupDomElement.classList.add("group");

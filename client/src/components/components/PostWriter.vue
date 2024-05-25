@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import defaultProfilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import emojiByGroup from "unicode-emoji-json/data-by-group.json";
-import {emojiDataByGroup, Post} from "~@/types.ts";
+import {EmojiDataByGroup, Post} from "~@/types.ts";
 import {onMounted} from "vue";
 import {gql} from "@apollo/client/core";
 import client from './../../apolloClient';
+import * as bootstrap from 'bootstrap';
 
 const props = defineProps<{
   col: string;
@@ -36,9 +37,9 @@ const sendPostBtnId = props.col + "SendPostBtn";
 const emojiPickerId = props.col + "EmojiPicker";
 const emojiListContainerId = props.col + "EmojiListContainer";
 
-const emojiDataByGroup: emojiDataByGroup = JSON.parse(JSON.stringify(emojiByGroup));
+const emojiDataByGroup: EmojiDataByGroup = JSON.parse(JSON.stringify(emojiByGroup));
 
-function createEmojiGroupsDomElements(emojiData: emojiDataByGroup, emojiListContainer: HTMLElement, messageInput: HTMLTextAreaElement) {
+function createEmojiGroupsDomElements(emojiData: EmojiDataByGroup, emojiListContainer: HTMLElement, messageInput: HTMLTextAreaElement) {
   for (const group in emojiData) {
     const groupDomElement = document.createElement("div");
     groupDomElement.classList.add("group");
@@ -70,8 +71,7 @@ function createEmojiGroupsDomElements(emojiData: emojiDataByGroup, emojiListCont
   }
 }
 
-function createPost(content: string): Post
-{
+function createPost(content: string): Post {
   let data = {
     title: "placeholder",
     content: content
@@ -113,6 +113,9 @@ onMounted(() => {
     let post = createPost(textareaElement.value);
     emit("hasSubmittedPost", post);
   });
+
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 });
 
 </script>
@@ -125,7 +128,8 @@ onMounted(() => {
       <button :id="pickEmojiBtnId" type="button" class="btn btn-link text-muted">
         <font-awesome-icon :icon="['fas', 'face-smile']"/>
       </button>
-      <button :id="textToSpeechBtnId" type="button" class="btn btn-link text-muted">
+      <button :id="textToSpeechBtnId" type="button" class="btn btn-link text-muted" data-bs-toggle="tooltip"
+              data-bs-placement="bottom" data-bs-title="Cette fonctionnalité n'est pas encore disponible.">
         <font-awesome-icon :icon="['fas', 'microphone']"/>
       </button>
       <button :id="sendPostBtnId" class="btn btn-primary">Poster</button>

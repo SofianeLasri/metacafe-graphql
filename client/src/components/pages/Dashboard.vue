@@ -73,11 +73,11 @@ onMounted(() => {
           </div>
 
           <div class="friend-list card">
-            <h4>Amis (6)</h4>
+            <h4>Amis (1)</h4>
 
             <div class="d-flex flex-column mt-2">
-              <ProfileCard :id="1" :avatar="defaultProfilePic" username="Jacqueline"
-                           status="En ligne" v-for="i in 6" :key="i"/>
+              <ProfileCard :id="1" :avatar="defaultProfilePic" username="Métacafé"
+                           status="En ligne"/>
             </div>
           </div>
         </div>
@@ -96,10 +96,10 @@ onMounted(() => {
             </div>
 
             <div class="feed-cards" id="friendFeed">
-              <PostCard v-for="i in 5" :key="i"
-                        :id="1"
+              <PostCard :id="0"
                         avatar="/src/assets/images/square-logo-with-background.avif"
-                        username="Eric" title="Test" text="Kebab ou burgi ?"/>
+                        username="Métacafé" title="Placeholder" :timestamp="1716670526"
+                        text="Le fil d'actualité privé n'est pas encore terminé. Reviens dans quelques jours ! 😉"/>
             </div>
           </div>
 
