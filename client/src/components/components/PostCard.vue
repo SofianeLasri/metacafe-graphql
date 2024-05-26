@@ -6,7 +6,7 @@ import {onMounted} from "vue";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faMicrophone, faHeart as fasHeart, faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 import {faComment, faHeart as farHeart} from '@fortawesome/free-regular-svg-icons';
-import {Comment} from "~@/types.ts";
+import {Comment, Post} from "~@/types.ts";
 
 library.add(faMicrophone, fasHeart, farHeart, faComment, faPaperPlane);
 
@@ -27,6 +27,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'hasSubmittedComment', commentId: number): void
+  (e: 'showComments', postId: number): void
 }>();
 
 const CREATE_LIKE_MUTATION = gql`
@@ -129,6 +130,7 @@ function formatTimestamp(timestamp: number): string {
 
 const elementId: string = props.elementId ? props.elementId + props.id : `postCard${props.id}`;
 const idButtonLike = elementId + "likeBtn";
+const idButtonComment = elementId + "commentBtn";
 const pickEmojiBtnId = elementId + "PickEmojiBtn";
 const commentInputId = elementId + "CommentInput";
 const sendCommentBtnId = elementId + "SendCommentBtn";
@@ -137,18 +139,23 @@ const date = props.timestamp ? formatTimestamp(props.timestamp) : "";
 
 onMounted(() => {
   if(props.withComments) {
-    const buttonComment: HTMLElement = document.getElementById("commentBtn")! as HTMLElement;
+    const sendCommentButton: HTMLElement = document.getElementById(sendCommentBtnId)! as HTMLElement;
     const commentInput: HTMLInputElement = document.getElementById(commentInputId)! as HTMLInputElement;
 
-    buttonComment.addEventListener("click", async () => {
+    sendCommentButton.addEventListener("click", async () => {
       let postId = await commentPost(commentInput.value);
       emit('hasSubmittedComment', postId);
     });
   } else {
     const buttonLike: HTMLElement = document.getElementById(idButtonLike)! as HTMLElement;
+    const buttonComment: HTMLElement = document.getElementById(idButtonComment)! as HTMLElement;
 
     buttonLike.addEventListener("click", () => {
       likePost();
+    });
+
+    buttonComment.addEventListener("click", () => {
+      emit('showComments', props.id);
     });
   }
 
@@ -177,7 +184,7 @@ onMounted(() => {
         {{ date }}
       </div>
       <div class="d-flex">
-        <button type="button" class="btn btn-link text-muted" id="commentBtn">
+        <button type="button" class="btn btn-link text-muted" :id="idButtonComment">
           <font-awesome-icon :icon="['far', 'comment']" class="action-icon"/>
           {{ props.comments }}
         </button>

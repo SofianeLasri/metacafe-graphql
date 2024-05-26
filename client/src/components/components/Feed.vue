@@ -11,6 +11,10 @@ const props = defineProps<{
   type: FeedType;
 }>();
 
+const emit = defineEmits<{
+  (e: 'showComments', post: Post): void
+}>();
+
 const GET_POSTS_QUERY = gql`
 query Posts {
   posts {
@@ -80,6 +84,11 @@ function invertArray(array: any[]): any[] {
   return invertedArray;
 }
 
+function emitShowComments(postId: number): void {
+  const post = posts.value.find(post => post.id === postId)!;
+  emit("showComments", post);
+}
+
 onMounted(async () => {
   posts.value = await getPosts();
 });
@@ -95,7 +104,7 @@ eventBus.on('hasSubmittedPost', async (feedType: FeedType) => {
 
 <template>
   <div class="feed-cards" :id="id">
-    <PostCard v-for="post in posts" :key="post.id"
+    <PostCard v-for="post in posts" :key="post.id" @showComments="emitShowComments"
               :id="post.id" :avatar="post.author.profilePicture"
               :username="post.author.username" :title="post.title" :text="post.content"/>
   </div>

@@ -6,16 +6,45 @@ import {faSmile, faMicrophone, faHeart} from "@fortawesome/free-solid-svg-icons"
 import {faComment} from '@fortawesome/free-regular-svg-icons'
 import PostCard from "~@/components/components/PostCard.vue";
 import PostWriter from "~@/components/components/PostWriter.vue";
-import {h, onMounted, render} from "vue";
-import {FeedType, Post} from "~@/types.ts";
+import {h, onMounted, ref, render} from "vue";
+import {Comment, Post, User} from "~@/types.ts";
 import Feed from "~@/components/components/Feed.vue";
 import eventBus from "~@/eventBus.ts";
+import {gql} from "@apollo/client/core";
+import client from "~@/apolloClient.ts";
 
 library.add(faSmile, faMicrophone, faHeart, faComment);
 
 const userProfilePictureUrl: string = localStorage.getItem("profilePictureUrl")!;
 const userName: string = localStorage.getItem("username")!;
 const userId: number = parseInt(localStorage.getItem("userId")!);
+
+// On est d'accord que normalement le type de cette variable est Comment, mais pour des raisons de temps on va faire comme si c'était un Post
+const selectedPublicFeedPostComments = ref<Post[]>([]);
+
+const GET_POSTS_COMMENT_QUERY = gql`
+query GetPostQuery($postId: Int!) {
+  postComments(postId: $postId) {
+    body
+    id
+    post {
+      id
+      content
+      title
+      author {
+        email
+        id
+        username
+      }
+    }
+    user {
+      id
+      username
+      email
+    }
+  }
+}
+`;
 
 function refreshPrivateFeed() {
   eventBus.emit('hasSubmittedPost', 'friends');
@@ -26,12 +55,75 @@ function refreshPublicFeed() {
 }
 
 function refreshPrivateComments() {
+  const friendsCommentCol = document.getElementById('friendsCommentCol')!;
+  const commentsContainer = friendsCommentCol.querySelector('.feed-cards')!;
+  getCommentsForPostAndShow(selectedPublicFeedPostComments.value[0], commentsContainer);
+
   eventBus.emit('hasSubmittedComment', 'friends');
 }
 
 function refreshPublicComments() {
+  const globalCommentCol = document.getElementById('globalCommentCol')!;
+  const commentsContainer = globalCommentCol.querySelector('.feed-cards')!;
+  getCommentsForPostAndShow(selectedPublicFeedPostComments.value[0], commentsContainer);
+
   eventBus.emit('hasSubmittedComment', 'global');
 }
+
+function showPublicCommentSectionForPost(post: Post): void {
+  const globalFeedCol = document.getElementById('globalFeedCol')!;
+  const globalCommentCol = document.getElementById('globalCommentCol')!;
+
+  toggleFeedComments(post, globalFeedCol, globalCommentCol);
+}
+
+function showPrivateCommentSectionForPost(post: Post): void {
+  const friendsFeedCol = document.getElementById('friendsFeedCol')!;
+  const friendsCommentCol = document.getElementById('friendsCommentCol')!;
+
+  toggleFeedComments(post, friendsFeedCol, friendsCommentCol);
+}
+
+function toggleFeedComments(post: Post, feedCol: HTMLElement, commentCol: HTMLElement): void {
+  feedCol.classList.add('d-none');
+  commentCol.classList.remove('d-none');
+}
+
+function getCommentsForPostAndShow(post: Post, commentsContainer: Element): void {
+  client.query({
+    query: GET_POSTS_COMMENT_QUERY,
+    variables: {
+      postId: post.id
+    }
+  }).then(result => {
+    if (result.data.postComments) {
+      let comments: Post[] = [];
+      for (let comment of result.data.postComments) {
+        let commentAuthor: User = {
+          id: comment.user.id,
+          username: comment.user.username,
+          email: comment.user.email,
+          profilePicture: defaultProfilePic,
+        };
+
+        let commentObject: Post = {
+          id: comment.id,
+          content: comment.body,
+          author: commentAuthor,
+          title: "Commentaire",
+        }
+
+        comments.push(commentObject);
+      }
+
+      selectedPublicFeedPostComments.value = comments;
+    }
+  });
+
+}
+
+
+
 
 onMounted(() => {
 
@@ -95,7 +187,7 @@ onMounted(() => {
           <!-- TODO: Faire la colonne des commentaires pour le feed privé une fois qu'il est implémenté -->
 
           <!-- Public feed -->
-          <div class="feed-col d-none" id="globalFeedCol">
+          <div class="feed-col" id="globalFeedCol">
             <div class="col-header">
               <div class="text-white">
                 <h3>Le grand salon</h3>
@@ -105,14 +197,14 @@ onMounted(() => {
               <PostWriter col="public" @hasSubmittedPost="refreshPublicFeed"/>
             </div>
 
-            <Feed type="global"/>
+            <Feed type="global" @showComments="showPublicCommentSectionForPost"/>
           </div>
 
-          <div class="feed-col" id="globalCommentCol">
+          <div class="feed-col d-none" id="globalCommentCol">
             <div class="col-header">
               <div class="text-white">
                 <h3>Commenter</h3>
-                <p>Tous les intellectuels de métacafé se retrouvent ici</p>
+                <p>Bien sûr, l'espace commentaire est un endroit calme et apaisé. 😉</p>
               </div>
 
               <PostCard :id="99" :with-comments="true" @hasSubmittedComment="refreshPublicComments"
@@ -121,6 +213,11 @@ onMounted(() => {
                         text="Le fil d'actualité privé n'est pas encore terminé. Reviens dans quelques jours ! 😉"/>
             </div>
 
+            <div class="feed-cards">
+              <PostCard v-for="post in selectedPublicFeedPostComments" :key="post.id"
+                        :id="post.id" :avatar="post.author.profilePicture"
+                        :username="post.author.username" :title="post.title" :text="post.content"/>
+            </div>
           </div>
         </div>
       </div>
