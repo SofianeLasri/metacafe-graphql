@@ -190,10 +190,10 @@ onMounted(() => {
       <a href="#" class="small text-light">Conditions générales d'utilisation</a>
       <span class="small text-light">
         2024 -
-        <a href="https://github.com/FlorianB30" target="_blank" class="text-light">Floriant Biendiné</a>,
         <a href="https://sofianelasri.fr/" target="_blank" class="text-light">Sofiane Lasri</a>,
+        <a href="https://github.com/Paul-HenryN" target="_blank" class="text-light">Paul-Henry Ngounou</a>,
         <a href="https://github.com/Dorianmav" target="_blank" class="text-light">Dorian Mavoungoud</a> &
-        <a href="https://github.com/Paul-HenryN" target="_blank" class="text-light">Paul-Henry Ngounou</a>
+        <a href="https://github.com/FlorianB30" target="_blank" class="text-light">Florian Biendiné</a>
       </span>
     </div>
   </div>
