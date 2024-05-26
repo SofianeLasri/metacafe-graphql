@@ -25,5 +25,6 @@ Voici la liste des fonctionnalité que doit posséder ce projet :
 Lancez la commande `npm run setup` pour installer les dépendances du projet, `docker compose up -d` pour créer le
 container docker, puis `npm run start` pour lancer le site.
 
-**Si vous ne souhaitez pas ou ne pouvez pas utiliser Docker, copier le fichier .env.example en .env à la fois dans le
-dossier /client et /server, puis lancez la commande `npm run start` dans les deux dossiers.**
+**Copier le fichier .env.example en .env à la fois dans le
+dossier /client et /server, puis lancez la commande `npm run start` dans les deux dossiers.** (C'est pas top mais ça
+fonctionne 😅)
