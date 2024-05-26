@@ -1,10 +1,10 @@
 {
   "name": "metacafe",
-  "version": "1.0.0",
-  "description": "Un réseau social comme les autres",
+  "version": "2.0.0",
+  "description": "Un réseau social comme les autres (mais surtout comme Twitter :D)",
   "main": "index.js",
   "scripts": {
-    "setup": "npm install && (cd client && npm install) && (cd .. && cd server && npm install && npx prisma migrate dev)",
+    "setup": "npm install && (cd client && npm install) && (cd .. && cd server && npm install && npx prisma migrate dev && npm run seed)",
     "start-client": "cd client && npm run dev:host",
     "start-server": "cd server && npm run start",
     "start": "concurrently \"npm run start-client\" \"npm run start-server\""

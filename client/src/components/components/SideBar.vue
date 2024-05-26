@@ -4,17 +4,17 @@ import ProfileCard from "~@/components/components/ProfileCard.vue";
 import SearchZone from "~@/components/components/SearchZone.vue";
 import defaultProfilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import {onMounted, ref} from "vue";
-import {Activity, userPublicProfile} from "~@/types.ts";
+import {Activity, UserPublicProfile} from "~@/types.ts";
 
 const props = defineProps<{
-  users: userPublicProfile[];
+  users: UserPublicProfile[];
   activities: Activity[];
 }>();
 
 console.log(props.activities);
 
 const emit = defineEmits<{
-  (e: 'profileClicked', user: userPublicProfile): void
+  (e: 'profileClicked', user: UserPublicProfile): void
 }>()
 
 const sidebarRef = ref<HTMLElement | null>(null);
@@ -25,10 +25,10 @@ const userProfilePictureUrl: string = localStorage.getItem("profilePictureUrl")!
 const userName: string = localStorage.getItem("username")!;
 const userId: number = parseInt(localStorage.getItem("userId")!);
 
-const acitivitiesSortedUsersList: userPublicProfile[] = [];
+const acitivitiesSortedUsersList: UserPublicProfile[] = [];
 
 props.activities.forEach((activity: Activity) => {
-  let user: userPublicProfile = props.users.find((user: userPublicProfile) => user.id === activity.targetUserId)!;
+  let user: UserPublicProfile = props.users.find((user: UserPublicProfile) => user.id === activity.targetUserId)!;
   acitivitiesSortedUsersList.push(user);
 });
 
@@ -70,7 +70,7 @@ onMounted(() => {
   }
 });
 
-function profileClicked(user: userPublicProfile) {
+function profileClicked(user: UserPublicProfile) {
   emit("profileClicked", user);
 }
 </script>

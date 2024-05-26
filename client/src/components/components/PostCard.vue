@@ -133,6 +133,8 @@ const idButtonComment = elementId + "commentBtn";
 const pickEmojiBtnId = elementId + "PickEmojiBtn";
 const commentInputId = elementId + "CommentInput";
 const sendCommentBtnId = elementId + "SendCommentBtn";
+const idHeartNotLiked = elementId + "heartNotLiked";
+const idHeartLiked = elementId + "heartLiked";
 
 const date = props.timestamp ? formatTimestamp(props.timestamp) : "";
 
@@ -147,12 +149,25 @@ onMounted(() => {
     });
   }
 
+  const heartNotLiked: HTMLElement = document.getElementById(idHeartNotLiked)! as HTMLElement;
+  const heartLiked: HTMLElement = document.getElementById(idHeartLiked)! as HTMLElement;
+  heartLiked.classList.add("d-none");
+
   if (props.footerType === 'like') {
     const buttonLike: HTMLElement = document.getElementById(idButtonLike)! as HTMLElement;
     const buttonComment: HTMLElement = document.getElementById(idButtonComment)! as HTMLElement;
 
     buttonLike.addEventListener("click", () => {
       likePost();
+
+      if (heartNotLiked.classList.contains("d-none")) {
+        heartNotLiked.classList.toggle("d-none");
+        heartLiked.classList.toggle("d-none");
+      } else {
+        heartNotLiked.classList.toggle("d-none");
+        heartLiked.classList.toggle("d-none");
+      }
+
     });
 
     buttonComment.addEventListener("click", () => {
@@ -190,7 +205,8 @@ onMounted(() => {
           {{ props.comments }}
         </button>
         <button type="button" class="btn btn-link text-primary" :id="idButtonLike">
-          <font-awesome-icon :icon="['far', 'heart']" class="action-icon"/>
+          <font-awesome-icon :id="idHeartNotLiked" :icon="['far', 'heart']" class="action-icon"/>
+          <font-awesome-icon :id="idHeartLiked" :icon="['fas', 'heart']" class="action-icon"/>
           {{ props.likes }}
         </button>
       </div>
