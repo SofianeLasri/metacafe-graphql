@@ -49,3 +49,10 @@ export type Post = {
 }
 
 export type FeedType = "global" | "friends";
+
+export type Comment = {
+    id: number;
+    body: string;
+    post: Post;
+    user: User;
+}
