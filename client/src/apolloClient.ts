@@ -4,6 +4,9 @@ import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 
 const httpLink = createUploadLink({
     uri: import.meta.env.VITE_BACKEND_URL,
+    headers: {
+        'Apollo-Require-Prelight': 'true'
+    }
 });
 
 const authLink = setContext((_, { headers }) => {

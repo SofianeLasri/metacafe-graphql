@@ -5,6 +5,7 @@ import {gql} from "@apollo/client/core";
 import client from "~@/apolloClient.ts";
 import {onMounted, ref} from "vue";
 import PostCard from "~@/components/components/PostCard.vue";
+import eventBus from "~@/eventBus.ts";
 
 const props = defineProps<{
   type: FeedType;
@@ -29,14 +30,17 @@ const id = props.type + "Feed";
 const posts = ref<Post[]>([]);
 
 async function getPosts(): Promise<Post[]> {
+  console.log("Ici ça trigger getPosts()");
   let posts: Post[] = [];
   const result = await client.query({
     query: GET_POSTS_QUERY,
     context: {
+      queryDeduplication: false,
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
-      }
-    }
+      },
+    },
+    fetchPolicy: 'network-only'
   });
 
   if (result.data.posts) {
@@ -61,13 +65,32 @@ async function getPosts(): Promise<Post[]> {
     console.error("No posts found. It is possible that no post is available in the database, but since this haven't been tested yet, it is actually considered as an error.");
   }
 
-  return posts;
+  console.log("On a trouvé " + posts.length + " posts !")
+
+  return invertArray(posts);
+}
+
+function invertArray(array: any[]): any[] {
+  let invertedArray: any[] = [];
+
+  for (let i = array.length - 1; i >= 0; i--) {
+    invertedArray.push(array[i]);
+  }
+
+  return invertedArray;
 }
 
 onMounted(async () => {
   posts.value = await getPosts();
 });
 
+eventBus.on('hasSubmittedPost', async (feedType: FeedType) => {
+  console.log("On a reçu un post ! feedType: " + feedType + " props.type: " + props.type);
+  if (feedType === props.type) {
+    console.log("On va rafraîchir le feed !");
+    posts.value = await getPosts();
+  }
+});
 </script>
 
 <template>

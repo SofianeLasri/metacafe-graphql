@@ -71,12 +71,12 @@ function createEmojiGroupsDomElements(emojiData: EmojiDataByGroup, emojiListCont
   }
 }
 
-function createPost(content: string): Post {
+async function createPost(content: string): Promise<Post> {
   let data = {
     title: "placeholder",
     content: content
   };
-  client.mutate({
+  await client.mutate({
     mutation: CREATE_POST_MUTATION,
     variables: data,
     context: {
@@ -108,9 +108,8 @@ onMounted(() => {
     emojiPicker.classList.toggle("active");
   });
 
-  sendPostBtnElement.addEventListener("click", () => {
-    console.log(textareaElement.value);
-    let post = createPost(textareaElement.value);
+  sendPostBtnElement.addEventListener("click", async () => {
+    let post = await createPost(textareaElement.value);
     emit("hasSubmittedPost", post);
   });
 

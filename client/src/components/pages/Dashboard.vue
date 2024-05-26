@@ -7,45 +7,25 @@ import {faComment} from '@fortawesome/free-regular-svg-icons'
 import PostCard from "~@/components/components/PostCard.vue";
 import PostWriter from "~@/components/components/PostWriter.vue";
 import {h, onMounted, render} from "vue";
-import {Post} from "~@/types.ts";
+import {FeedType, Post} from "~@/types.ts";
 import Feed from "~@/components/components/Feed.vue";
+import eventBus from "~@/eventBus.ts";
 
-library.add(faSmile, faMicrophone,faHeart, faComment);
+library.add(faSmile, faMicrophone, faHeart, faComment);
 
 const userProfilePictureUrl: string = localStorage.getItem("profilePictureUrl")!;
 const userName: string = localStorage.getItem("username")!;
 const userId: number = parseInt(localStorage.getItem("userId")!);
 
-function addPostToFriendFeed(post: Post) {
-  addPostToFeed(post, "friend");
+function refreshPrivateFeed() {
+  eventBus.emit('hasSubmittedPost', 'friends');
 }
 
-function addPostToPublicFeed(post: Post) {
-  addPostToFeed(post, "public");
-}
-
-function addPostToFeed(post: Post, feed: string) {
-  const feedElement = document.getElementById(feed + "Feed");
-
-  if (feedElement) {
-    const container = document.createElement('div');
-
-    const vnode = h(PostCard, {
-      id: post.id,
-      avatar: userProfilePictureUrl,
-      username: userName,
-      title: post.title,
-      text: post.content,
-    });
-
-    render(vnode, container);
-
-    feedElement.insertBefore(container, feedElement.firstChild);
-  }
+function refreshPublicFeed() {
+  eventBus.emit('hasSubmittedPost', 'global');
 }
 
 onMounted(() => {
-
 
 });
 
@@ -93,7 +73,7 @@ onMounted(() => {
                 <p>C'est ici que se retrouvent les ragots entre amis</p>
               </div>
 
-              <PostWriter col="friends"  @hasSubmittedPost="addPostToFriendFeed"/>
+              <PostWriter col="friends" @hasSubmittedPost="refreshPrivateFeed"/>
             </div>
 
             <div class="feed-cards" id="friendFeed">
@@ -112,10 +92,10 @@ onMounted(() => {
                 <p>Tous les intellectuels de métacafé se retrouvent ici</p>
               </div>
 
-              <PostWriter col="public" @hasSubmittedPost="addPostToPublicFeed"/>
+              <PostWriter col="public" @hasSubmittedPost="refreshPublicFeed"/>
             </div>
 
-            <Feed type="global" />
+            <Feed type="global"/>
           </div>
         </div>
       </div>
