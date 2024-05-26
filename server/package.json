@@ -6,7 +6,8 @@
     "compile": "tsc",
     "start": "npm run compile && node ./dist/src/index.js",
     "dev": "node --import ./scripts/register.js --watch src/index.ts",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts",
+    "seed": "node ./scripts/seed.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
   "type": "module",
   "dependencies": {
     "@apollo/server": "^4.10.4",
+    "@faker-js/faker": "^8.4.1",
     "@prisma/client": "^5.14.0",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
