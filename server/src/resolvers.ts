@@ -54,11 +54,11 @@ export const resolvers: Resolvers = {
       };
     },
 
-      centersOfInterest: (_, {name}, {dataSources}) => {
-          return dataSources.db.centerOfInterest.findMany({
-              where: name ? {name: {contains: name}} : {},
-          });
-      },
+    centersOfInterest: (_, { name }, { dataSources }) => {
+      return dataSources.db.centerOfInterest.findMany({
+        where: name ? { name: { contains: name } } : {},
+      });
+    },
     centersOfInterestOfUser: async (_, { userId }, { dataSources }) => {
       const userInterests = await dataSources.db.userInterest.findMany({
         where: { userId },
@@ -69,6 +69,10 @@ export const resolvers: Resolvers = {
         (ui: { centerOfInterest: any }) => ui.centerOfInterest
       );
     },
+
+    userByEmail: async (_, { email }, { dataSources }) => 
+      await dataSources.db.user.findUnique({ where: { email } }),
+
   },
   Mutation: {
     createUser,
@@ -103,5 +107,32 @@ export const resolvers: Resolvers = {
         )
       );
     },
-  },
-};
+
+    addFriend: async (_, { userId, friendId }, { dataSources }) => {
+      const user = await dataSources.db.user.findUnique({
+        where: { id: userId },
+      });
+
+      const friend = await dataSources.db.user.findUnique({
+        where: { id: friendId },
+      });
+
+      await dataSources.db.friend.create({
+        data: {
+          userId: userId,
+          friendId: friendId,
+        },
+      });
+  
+      // Récupérez l'utilisateur mis à jour avec ses amis
+      const updatedUser = await dataSources.db.user.findUnique({
+        where: { id: userId },
+        include: { friends: true },
+      });
+  
+      return updatedUser;
+
+    },
+
+  }
+}

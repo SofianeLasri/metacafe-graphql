@@ -19,6 +19,8 @@ model User {
   UserInterest UserInterest[]
   comments     Comment[]
   likes        Like[]
+  friends   User[]   @relation("UserFriends", references: [id], through: Friend)
+  friendOf  User[]   @relation("UserFriends", references: [id], through: Friend)
 }
 
 model Post {
@@ -62,4 +64,14 @@ model Like {
   postId Int
   user   User @relation(fields: [userId], references: [id])
   post   Post @relation(fields: [postId], references: [id])
+}
+
+model Friend {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  friendId Int
+  user     User   @relation(fields: [userId], references: [id])
+  friend   User   @relation(fields: [friendId], references: [id])
+
+  @@unique([userId, friendId])
 }

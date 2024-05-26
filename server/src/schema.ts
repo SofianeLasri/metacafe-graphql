@@ -5,6 +5,7 @@ export const typeDefs = gql`
     id: Int!
     username: String!
     email: String!
+    friends: [User!]!
   }
 
   type Post {
@@ -29,6 +30,7 @@ export const typeDefs = gql`
       centerOfInterestIds: [Int!]!
     ): [UserInterest!]!
     login(email: String!, password: String!): LoginResponse!
+    addFriend(userId: Int!, friendId: Int!): User!
   }
 
   type Query {
@@ -43,6 +45,7 @@ export const typeDefs = gql`
     centersOfInterest(name: String): [CenterOfInterest!]!
     centerOfInterest(id: Int!): CenterOfInterest!
     centersOfInterestOfUser(userId: Int!): [CenterOfInterest!]!
+    userByEmail(email: String!): User
   }
 
   type LikesCountResponse {
