@@ -2,9 +2,8 @@
 import defaultProfilePic from "~@/assets/images/square-logo-with-background.avif?url";
 import PostCard from "~@/components/components/PostCard.vue";
 import {FeedType, Post, User} from "~@/types.ts";
-import eventBus from "~@/eventBus.ts";
 import client from "~@/apolloClient.ts";
-import {ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {gql} from "@apollo/client/core";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {library} from "@fortawesome/fontawesome-svg-core";
@@ -21,7 +20,7 @@ const emit = defineEmits<{
 }>();
 
 // On est d'accord que normalement le type de cette variable est Comment, mais pour des raisons de temps on va faire comme si c'était un Post
-const selectedPublicFeedPostComments = ref<Post[]>([]);
+const selectedPostComments = ref<Post[]>([]);
 
 const GET_POSTS_COMMENT_QUERY = gql`
 query GetPostQuery($postId: Int!) {
@@ -47,28 +46,24 @@ query GetPostQuery($postId: Int!) {
 }
 `;
 
-function refreshPrivateComments() {
-  const friendsCommentCol = document.getElementById('friendsCommentCol')!;
-  const commentsContainer = friendsCommentCol.querySelector('.feed-cards')!;
-  getCommentsForPostAndShow(selectedPublicFeedPostComments.value[0], commentsContainer);
-
-  eventBus.emit('hasSubmittedComment', 'friends');
+async function refreshComments(postId: number): Promise<void> {
+  await getCommentsForPostAndShow(postId);
 }
 
-function refreshPublicComments() {
-  const globalCommentCol = document.getElementById('globalCommentCol')!;
-  const commentsContainer = globalCommentCol.querySelector('.feed-cards')!;
-  getCommentsForPostAndShow(selectedPublicFeedPostComments.value[0], commentsContainer);
-
-  eventBus.emit('hasSubmittedComment', 'global');
-}
-
-function getCommentsForPostAndShow(post: Post): void {
-  client.query({
+async function getCommentsForPostAndShow(postId: number): Promise<void> {
+  console.log("getCommentsForPostAndShow");
+  await client.query({
     query: GET_POSTS_COMMENT_QUERY,
     variables: {
-      postId: post.id
-    }
+      postId: postId
+    },
+    context: {
+      queryDeduplication: false,
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+    },
+    fetchPolicy: 'network-only'
   }).then(result => {
     if (result.data.postComments) {
       let comments: Post[] = [];
@@ -90,11 +85,30 @@ function getCommentsForPostAndShow(post: Post): void {
         comments.push(commentObject);
       }
 
-      selectedPublicFeedPostComments.value = comments;
+      selectedPostComments.value = invertArray(comments);
     }
   });
-
 }
+
+function invertArray(array: any[]): any[] {
+  let invertedArray: any[] = [];
+
+  for (let i = array.length - 1; i >= 0; i--) {
+    invertedArray.push(array[i]);
+  }
+
+  return invertedArray;
+}
+
+onMounted(() => {
+
+});
+
+watch(() => props.post, (newPost, oldPost) => {
+  if (newPost) {
+    getCommentsForPostAndShow(newPost.id);
+  }
+}, {immediate: true});
 </script>
 
 <template>
@@ -111,14 +125,14 @@ function getCommentsForPostAndShow(post: Post): void {
       </div>
     </div>
 
-    <PostCard v-if="props.post" :id="props.post.id" :with-comments="true" @hasSubmittedComment="refreshPublicComments"
+    <PostCard v-if="props.post" :id="props.post.id" @hasSubmittedComment="refreshComments"
               avatar="/src/assets/images/square-logo-with-background.avif"
               :username="props.post.author.username" :title="props.post.title"
-              :text="props.post.content"/>
+              :text="props.post.content" footer-type="comment"/>
   </div>
 
   <div class="feed-cards">
-    <PostCard v-for="post in selectedPublicFeedPostComments" :key="post.id"
+    <PostCard v-for="post in selectedPostComments" :key="post.id" footer-type="none"
               :id="post.id" :avatar="post.author.profilePicture"
               :username="post.author.username" :title="post.title" :text="post.content"/>
   </div>

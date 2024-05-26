@@ -101,7 +101,7 @@ onMounted(() => {
             </div>
 
             <div class="feed-cards" id="friendsFeed">
-              <PostCard :id="0"
+              <PostCard :id="0" footer-type="like"
                         avatar="/src/assets/images/square-logo-with-background.avif"
                         username="Métacafé" title="Placeholder" :timestamp="1716670526"
                         text="Le fil d'actualité privé n'est pas encore terminé. Reviens dans quelques jours ! 😉"/>

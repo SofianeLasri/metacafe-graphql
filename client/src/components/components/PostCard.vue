@@ -21,11 +21,11 @@ const props = defineProps<{
   timestamp?: number;
   likes?: number;
   comments?: number;
-  withComments?: boolean;
+  footerType: 'like' | 'comment' | 'none';
 }>();
 
 const emit = defineEmits<{
-  (e: 'hasSubmittedComment', commentId: number): void
+  (e: 'hasSubmittedComment', postId: number): void
   (e: 'showComments', postId: number): void
 }>();
 
@@ -137,15 +137,17 @@ const sendCommentBtnId = elementId + "SendCommentBtn";
 const date = props.timestamp ? formatTimestamp(props.timestamp) : "";
 
 onMounted(() => {
-  if(props.withComments) {
+  if (props.footerType === 'comment') {
     const sendCommentButton: HTMLElement = document.getElementById(sendCommentBtnId)! as HTMLElement;
     const commentInput: HTMLInputElement = document.getElementById(commentInputId)! as HTMLInputElement;
 
     sendCommentButton.addEventListener("click", async () => {
-      let postId = await commentPost(commentInput.value);
-      emit('hasSubmittedComment', postId);
+      await commentPost(commentInput.value);
+      emit('hasSubmittedComment', props.id);
     });
-  } else {
+  }
+
+  if (props.footerType === 'like') {
     const buttonLike: HTMLElement = document.getElementById(idButtonLike)! as HTMLElement;
     const buttonComment: HTMLElement = document.getElementById(idButtonComment)! as HTMLElement;
 
@@ -178,7 +180,7 @@ onMounted(() => {
         {{ props.text }}
       </p>
     </div>
-    <div class="lower-part" v-if="!props.withComments">
+    <div class="lower-part" v-if="props.footerType === 'like'">
       <div class="small text-muted">
         {{ date }}
       </div>
@@ -193,7 +195,7 @@ onMounted(() => {
         </button>
       </div>
     </div>
-    <div class="lower-part d-flex gap-2" v-else>
+    <div class="lower-part d-flex gap-2" v-else-if="props.footerType === 'comment'">
       <button :id="pickEmojiBtnId" type="button" class="btn btn-link text-muted">
         <font-awesome-icon :icon="['fas', 'face-smile']"/>
       </button>

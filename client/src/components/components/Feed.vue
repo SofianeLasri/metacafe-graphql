@@ -105,7 +105,7 @@ eventBus.on('hasSubmittedPost', async (feedType: FeedType) => {
 <template>
   <div class="feed-cards" :id="id">
     <PostCard v-for="post in posts" :key="post.id" @showComments="emitShowComments"
-              :id="post.id" :avatar="post.author.profilePicture"
+              :id="post.id" :avatar="post.author.profilePicture" footer-type="like"
               :username="post.author.username" :title="post.title" :text="post.content"/>
   </div>
 </template>
