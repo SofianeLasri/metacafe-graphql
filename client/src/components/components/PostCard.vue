@@ -89,14 +89,29 @@ function formatTimestamp(timestamp: number): string {
 
 const elementId: string = props.elementId ? props.elementId + props.id : `postCard${props.id}`;
 const idButtonLike = elementId + "likeBtn";
+const idHeartNotLiked = elementId + "heartNotLiked";
+const idHeartLiked = elementId + "heartLiked";
 
 const date = props.timestamp ? formatTimestamp(parseInt(props.timestamp)) : "";
 
 onMounted(() => {
   const ButtonLike: HTMLElement = document.getElementById(idButtonLike)! as HTMLElement;
 
+  const HeartNotLiked: HTMLElement = document.getElementById(idHeartNotLiked)! as HTMLElement;
+  const HeartLiked: HTMLElement = document.getElementById(idHeartLiked)! as HTMLElement;
+  HeartLiked.classList.add("d-none");
+
   ButtonLike.addEventListener("click", () => {
     likePost();
+
+    if(HeartNotLiked.classList.contains("d-none")) {
+      HeartNotLiked.classList.toggle("d-none");
+      HeartLiked.classList.toggle("d-none");
+    } else {
+      HeartNotLiked.classList.toggle("d-none");
+      HeartLiked.classList.toggle("d-none");
+    }
+
   });
 })
 
@@ -126,7 +141,8 @@ onMounted(() => {
           {{ props.comments }}
         </button>
         <button type="button" class="btn btn-link text-primary" :id="idButtonLike">
-          <font-awesome-icon :icon="['far', 'heart']" class="action-icon"/>
+          <font-awesome-icon :id="idHeartNotLiked" :icon="['far', 'heart']" class="action-icon"/>
+          <font-awesome-icon :id="idHeartLiked" :icon="['fas', 'heart']" class="action-icon"/>
           {{ props.likes }}
         </button>
       </div>
