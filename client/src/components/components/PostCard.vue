@@ -18,7 +18,7 @@ const props = defineProps<{
   text: string;
   actionText?: string;
   actionLink?: string;
-  timestamp?: string;
+  timestamp?: number;
   likes?: number;
   comments?: number;
 }>();
@@ -49,7 +49,6 @@ function likePost(): void {
 
 function formatTimestamp(timestamp: number): string {
   const daysOfWeek = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-  const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
   const now = new Date();
   const date = new Date(timestamp * 1000);
@@ -57,7 +56,10 @@ function formatTimestamp(timestamp: number): string {
   const diffSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
   const diffMinutes = Math.floor(diffSeconds / 60);
   const diffHours = Math.floor(diffMinutes / 60);
-  const diffDays = Math.floor(diffHours / 24);
+
+  const hoursSinceMidnight = (now.getHours());
+
+  const diffDays = Math.floor(diffHours / hoursSinceMidnight);
   const diffWeeks = Math.floor(diffDays / 7);
   const diffMonths = Math.floor(diffDays / 30);
   const diffYears = Math.floor(diffDays / 365);

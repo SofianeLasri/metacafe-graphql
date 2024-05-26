@@ -8,6 +8,7 @@ import PostCard from "~@/components/components/PostCard.vue";
 import PostWriter from "~@/components/components/PostWriter.vue";
 import {h, onMounted, render} from "vue";
 import {Post} from "~@/types.ts";
+import Feed from "~@/components/components/Feed.vue";
 
 library.add(faSmile, faMicrophone,faHeart, faComment);
 
@@ -114,12 +115,7 @@ onMounted(() => {
               <PostWriter col="public" @hasSubmittedPost="addPostToPublicFeed"/>
             </div>
 
-            <div class="feed-cards" id="publicFeed">
-              <PostCard v-for="i in 5" :key="i"
-                        :id="2"
-                        avatar="/src/assets/images/square-logo-with-background.avif"
-                        username="Eric" title="Test" text="Kebab ou burgi ?"/>
-            </div>
+            <Feed type="global" />
           </div>
         </div>
       </div>

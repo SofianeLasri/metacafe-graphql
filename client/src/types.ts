@@ -9,7 +9,7 @@ export type EmojiDataByGroup = {
     }
 }
 
-export type userPublicProfile = {
+export type UserPublicProfile = {
     id: number;
     name: string;
     profilePicture?: number | null;
@@ -47,3 +47,5 @@ export type Post = {
     title: string;
     author: User;
 }
+
+export type FeedType = "global" | "friends";
