@@ -4,9 +4,8 @@ import {gql} from "@apollo/client/core";
 import client from './../../apolloClient';
 import {onMounted} from "vue";
 import {library} from "@fortawesome/fontawesome-svg-core";
-import {faMicrophone, faHeart as fasHeart, faPaperPlane} from "@fortawesome/free-solid-svg-icons";
+import {faHeart as fasHeart, faMicrophone, faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 import {faComment, faHeart as farHeart} from '@fortawesome/free-regular-svg-icons';
-import {Comment, Post} from "~@/types.ts";
 
 library.add(faMicrophone, fasHeart, farHeart, faComment, faPaperPlane);
 
