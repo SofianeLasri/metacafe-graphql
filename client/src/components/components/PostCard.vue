@@ -4,10 +4,11 @@ import {gql} from "@apollo/client/core";
 import client from './../../apolloClient';
 import {onMounted} from "vue";
 import {library} from "@fortawesome/fontawesome-svg-core";
-import {faMicrophone, faHeart as fasHeart} from "@fortawesome/free-solid-svg-icons";
-import {faComment, faHeart as farHeart} from '@fortawesome/free-regular-svg-icons'
+import {faMicrophone, faHeart as fasHeart, faPaperPlane} from "@fortawesome/free-solid-svg-icons";
+import {faComment, faHeart as farHeart} from '@fortawesome/free-regular-svg-icons';
+import {Comment} from "~@/types.ts";
 
-library.add(faMicrophone, fasHeart, farHeart, faComment);
+library.add(faMicrophone, fasHeart, farHeart, faComment, faPaperPlane);
 
 const props = defineProps<{
   elementId?: string;
@@ -21,12 +22,32 @@ const props = defineProps<{
   timestamp?: number;
   likes?: number;
   comments?: number;
+  withComments?: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: 'hasSubmittedComment', commentId: number): void
 }>();
 
 const CREATE_LIKE_MUTATION = gql`
 mutation LikePost($likePostId: Int!) {
   likePost(postId: $likePostId) {
     code
+  }
+}
+`;
+
+const CREATE_COMMENT_MUTATION = gql`
+mutation CommentPost($postId: Int!, $body: String!) {
+  commentPost(postId: $postId, body: $body) {
+    id
+    user {
+      id
+    }
+    post {
+      id
+    }
+    body
   }
 }
 `;
@@ -45,6 +66,25 @@ function likePost(): void {
       }
     }
   });
+}
+
+async function commentPost(body: string): Promise<number> {
+  let data = {
+    postId: props.id,
+    body: body
+  };
+
+  let result = await client.mutate({
+    mutation: CREATE_COMMENT_MUTATION,
+    variables: data,
+    context: {
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    }
+  });
+
+  return result.data.commentPost.id;
 }
 
 function formatTimestamp(timestamp: number): string {
@@ -89,15 +129,31 @@ function formatTimestamp(timestamp: number): string {
 
 const elementId: string = props.elementId ? props.elementId + props.id : `postCard${props.id}`;
 const idButtonLike = elementId + "likeBtn";
+const pickEmojiBtnId = elementId + "PickEmojiBtn";
+const commentInputId = elementId + "CommentInput";
+const sendCommentBtnId = elementId + "SendCommentBtn";
 
-const date = props.timestamp ? formatTimestamp(parseInt(props.timestamp)) : "";
+const date = props.timestamp ? formatTimestamp(props.timestamp) : "";
 
 onMounted(() => {
-  const ButtonLike: HTMLElement = document.getElementById(idButtonLike)! as HTMLElement;
+  if(props.withComments) {
+    const buttonComment: HTMLElement = document.getElementById("commentBtn")! as HTMLElement;
+    const commentInput: HTMLInputElement = document.getElementById(commentInputId)! as HTMLInputElement;
 
-  ButtonLike.addEventListener("click", () => {
-    likePost();
-  });
+    buttonComment.addEventListener("click", async () => {
+      let postId = await commentPost(commentInput.value);
+      emit('hasSubmittedComment', postId);
+    });
+  } else {
+    const buttonLike: HTMLElement = document.getElementById(idButtonLike)! as HTMLElement;
+
+    buttonLike.addEventListener("click", () => {
+      likePost();
+    });
+  }
+
+
+
 })
 
 </script>
@@ -116,7 +172,7 @@ onMounted(() => {
         {{ props.text }}
       </p>
     </div>
-    <div class="lower-part">
+    <div class="lower-part" v-if="!props.withComments">
       <div class="small text-muted">
         {{ date }}
       </div>
@@ -130,6 +186,15 @@ onMounted(() => {
           {{ props.likes }}
         </button>
       </div>
+    </div>
+    <div class="lower-part d-flex gap-2" v-else>
+      <button :id="pickEmojiBtnId" type="button" class="btn btn-link text-muted">
+        <font-awesome-icon :icon="['fas', 'face-smile']"/>
+      </button>
+      <input :id="commentInputId" type="text" class="form-control" placeholder="Commenter..."/>
+      <button :id="sendCommentBtnId" class="btn btn-primary">
+        <font-awesome-icon :icon="['fas', 'paper-plane']" />
+      </button>
     </div>
   </div>
 </template>

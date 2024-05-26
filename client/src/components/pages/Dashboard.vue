@@ -25,6 +25,14 @@ function refreshPublicFeed() {
   eventBus.emit('hasSubmittedPost', 'global');
 }
 
+function refreshPrivateComments() {
+  eventBus.emit('hasSubmittedComment', 'friends');
+}
+
+function refreshPublicComments() {
+  eventBus.emit('hasSubmittedComment', 'global');
+}
+
 onMounted(() => {
 
 });
@@ -66,7 +74,7 @@ onMounted(() => {
         <!-- Main content -->
         <div class="feed-wrapper">
           <!-- Friends feed -->
-          <div class="feed-col">
+          <div class="feed-col" id="friendsFeedCol">
             <div class="col-header">
               <div class="text-white">
                 <h3>Le café du coin</h3>
@@ -76,7 +84,7 @@ onMounted(() => {
               <PostWriter col="friends" @hasSubmittedPost="refreshPrivateFeed"/>
             </div>
 
-            <div class="feed-cards" id="friendFeed">
+            <div class="feed-cards" id="friendsFeed">
               <PostCard :id="0"
                         avatar="/src/assets/images/square-logo-with-background.avif"
                         username="Métacafé" title="Placeholder" :timestamp="1716670526"
@@ -84,8 +92,10 @@ onMounted(() => {
             </div>
           </div>
 
+          <!-- TODO: Faire la colonne des commentaires pour le feed privé une fois qu'il est implémenté -->
+
           <!-- Public feed -->
-          <div class="feed-col">
+          <div class="feed-col d-none" id="globalFeedCol">
             <div class="col-header">
               <div class="text-white">
                 <h3>Le grand salon</h3>
@@ -96,6 +106,21 @@ onMounted(() => {
             </div>
 
             <Feed type="global"/>
+          </div>
+
+          <div class="feed-col" id="globalCommentCol">
+            <div class="col-header">
+              <div class="text-white">
+                <h3>Commenter</h3>
+                <p>Tous les intellectuels de métacafé se retrouvent ici</p>
+              </div>
+
+              <PostCard :id="99" :with-comments="true" @hasSubmittedComment="refreshPublicComments"
+                        avatar="/src/assets/images/square-logo-with-background.avif"
+                        username="Métacafé" title="Placeholder" :timestamp="1716670526"
+                        text="Le fil d'actualité privé n'est pas encore terminé. Reviens dans quelques jours ! 😉"/>
+            </div>
+
           </div>
         </div>
       </div>
