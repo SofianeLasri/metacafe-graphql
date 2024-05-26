@@ -149,23 +149,23 @@ onMounted(() => {
     });
   }
 
-  const HeartNotLiked: HTMLElement = document.getElementById(idHeartNotLiked)! as HTMLElement;
-  const HeartLiked: HTMLElement = document.getElementById(idHeartLiked)! as HTMLElement;
-  HeartLiked.classList.add("d-none");
+  const heartNotLiked: HTMLElement = document.getElementById(idHeartNotLiked)! as HTMLElement;
+  const heartLiked: HTMLElement = document.getElementById(idHeartLiked)! as HTMLElement;
+  heartLiked.classList.add("d-none");
 
   if (props.footerType === 'like') {
     const buttonLike: HTMLElement = document.getElementById(idButtonLike)! as HTMLElement;
     const buttonComment: HTMLElement = document.getElementById(idButtonComment)! as HTMLElement;
 
-    ButtonLike.addEventListener("click", () => {
+    buttonLike.addEventListener("click", () => {
       likePost();
 
-      if(HeartNotLiked.classList.contains("d-none")) {
-        HeartNotLiked.classList.toggle("d-none");
-        HeartLiked.classList.toggle("d-none");
+      if (heartNotLiked.classList.contains("d-none")) {
+        heartNotLiked.classList.toggle("d-none");
+        heartLiked.classList.toggle("d-none");
       } else {
-        HeartNotLiked.classList.toggle("d-none");
-        HeartLiked.classList.toggle("d-none");
+        heartNotLiked.classList.toggle("d-none");
+        heartLiked.classList.toggle("d-none");
       }
 
     });
